@@ -1,0 +1,71 @@
+#background{
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+#background_top{
+    background: var(--colorchip-80, #73A4D0);
+    width: 1440px;
+    height: 216px;
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+#header{
+    display: flex;
+    width: 846px;
+    height : 112px;
+    justify-content: space-between;
+    align-items: center;
+    top: 40px;
+    left: 247px;
+    position: relative;
+}
+
+#logo{
+    display: flex;
+    position: absolute;
+}
+
+#monthYear{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:24px;
+    top:40px;
+    left:404px;
+    width:232px;
+    height:112px;
+    position: absolute;
+}
+
+#calendar_prev_btn{
+    left:354px;
+    position: absolute;
+}
+
+#calendar_next_btn{
+    left : 600px;
+    position: absolute;
+}
+
+#icons{
+    left : 800px;
+    width: 132px;
+    height: 40px;
+    position: absolute;
+    float : left;
+}
+
+#chartIcon{
+    margin-left : 10px;
+}
+
+#calendarIcon{
+    margin-left : 10px;
+}
+
+
+

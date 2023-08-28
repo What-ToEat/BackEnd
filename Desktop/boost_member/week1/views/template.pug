@@ -1,0 +1,31 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel='stylesheet' , href = 'template.css')
+        block styles
+        title Document
+
+    body 
+        script(type = "text/javascript").
+            let year = new Date().getFullYear()
+            let month = new Date().getMonth()
+            let date = new Date().getDate()
+
+        div(id = 'background_top')
+            header(id = 'header')
+                h1(id = 'logo') Wise Wallet
+                div(id = 'monthYear')
+                    p= year
+                    
+                img(src = 'images/icons-chevron-left.svg' id = 'calendar_prev_btn')
+                img(src = 'images/icons-chevron-right.svg' id = 'calendar_next_btn')
+                div(id = 'icons')
+                    a(href = '#' id = 'docsIcon')
+                        img(src = 'images/docsIcon.svg')
+                    a(href = '#' id = 'calendarIcon')
+                        img(src = 'images/calendarIcon.svg')
+                    a(href = '#' id = 'chartIcon')
+                        img(src = 'images/chartIcon.svg')
+
