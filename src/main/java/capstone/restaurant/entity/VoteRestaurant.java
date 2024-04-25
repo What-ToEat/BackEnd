@@ -1,6 +1,5 @@
 package capstone.restaurant.entity;
 
-
 import jakarta.persistence.*;
 
 @Entity
