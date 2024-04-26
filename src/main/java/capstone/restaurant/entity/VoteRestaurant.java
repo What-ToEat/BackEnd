@@ -1,8 +1,14 @@
 package capstone.restaurant.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@RequiredArgsConstructor
 @SequenceGenerator(
         name= "VOTE_RES_SEQ_GEN",
         sequenceName = "VOTE_RES_SEQ")
