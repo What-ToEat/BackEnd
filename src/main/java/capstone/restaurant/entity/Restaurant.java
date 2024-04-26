@@ -13,4 +13,7 @@ public class Restaurant {
     private Long id;
 
     private String address;
+
+    private String name;
+
 }

@@ -1,10 +1,8 @@
 package capstone.restaurant.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,4 +17,12 @@ public class Vote {
     private Long id;
 
     private String voteHash;
+
+    private String voteName;
+    private LocalDateTime expireAt;
+    private String phoneNumber;
+
+    @OneToMany(mappedBy = "vote")
+    private List<VoteRestaurant> voteRestaurantList = new ArrayList<VoteRestaurant>();
+
 }

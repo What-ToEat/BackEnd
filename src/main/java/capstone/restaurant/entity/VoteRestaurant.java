@@ -20,5 +20,9 @@ public class VoteRestaurant {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    private String voter;
+    private String voterName;
+
+    private String voterHash;
+
+    private Integer voterImage;
 }
