@@ -22,7 +22,7 @@ public class VoteRestaurant {
     @JoinColumn(name = "vote_id")
     private Vote vote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
