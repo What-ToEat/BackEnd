@@ -9,8 +9,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
 @SequenceGenerator(name = "RES_TAG_SEQ_GEN" , sequenceName = "RES_TAG_SEQ")
+@Table(indexes = @Index(name = "idx_tag" , columnList = "tag_id"))
 public class RestaurantTag {
 
     @Id

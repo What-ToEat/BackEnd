@@ -8,10 +8,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
 @SequenceGenerator(
         name= "VOTE_RES_SEQ_GEN",
         sequenceName = "VOTE_RES_SEQ")
+@Table(indexes = @Index(columnList = "vote_id"))
 public class VoteRestaurant {
 
     @Id
@@ -28,6 +28,7 @@ public class VoteRestaurant {
 
     private String voterName;
 
+    @Column(unique = true)
     private String voterHash;
 
     private Integer voterImage;

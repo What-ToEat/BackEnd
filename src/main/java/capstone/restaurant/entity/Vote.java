@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
 @Setter
 @SequenceGenerator(
         name= "VOTE_SEQ_GEN",
@@ -22,13 +21,16 @@ public class Vote {
     @GeneratedValue(generator = "VOTE_SEQ_GEN")
     private Long id;
 
+    @Column(unique = true)
     private String voteHash;
 
     private String voteName;
+
     private LocalDateTime expireAt;
+
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "vote")
+    @OneToMany(mappedBy = "vote" , cascade = {CascadeType.REMOVE})
     private List<VoteRestaurant> voteRestaurantList = new ArrayList<VoteRestaurant>();
 
 }
