@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-APP_NAME="WhatToEat"
-REPOSITORY=/home/ubuntu/
+APP_NAME="what_to_eat"
+REPOSITORY=/home/ubuntu/WhatToEat
 
 echo "> Check the currently running container"
 CONTAINER_ID=$(docker ps -aqf "name=$APP_NAME")
-
+pwd
+ls
 if [ -z "$CONTAINER_ID" ];
 then
   echo "> No such container is running."
@@ -22,4 +23,4 @@ echo "> Build Docker image"
 docker build -t "$APP_NAME" "$REPOSITORY"
 
 echo "> Run the Docker container"
-docker run -d -p 8000:8080 --env-file .env --name "$APP_NAME" "$APP_NAME"
+docker run -d -p 8080:8080 --env-file /home/ubuntu/WhatToEat/.env --name "$APP_NAME" "$APP_NAME"
