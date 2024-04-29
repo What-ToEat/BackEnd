@@ -15,7 +15,6 @@ public class Review {
     @GeneratedValue(generator = "REV_SEQ_GEN")
     private Long id;
 
-    @Column(name = "is_ai_review")
     private Boolean isAiReview;
 
     private String review;
