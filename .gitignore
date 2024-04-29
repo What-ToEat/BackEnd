@@ -37,4 +37,6 @@ log
 .vscode/
 
 application.properties
+application-local.properties
+application-prod.properties
 logFile.log

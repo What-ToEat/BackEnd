@@ -1,5 +1,7 @@
 package capstone.restaurant.vote;
 
+import capstone.restaurant.exceptionHandler.CustomException;
+import capstone.restaurant.exceptionHandler.ErrorResponseDto;
 import capstone.restaurant.vote.dto.GetMemberReturnDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +24,7 @@ public class VoteController {
     public VoteController(){}
 
     @Operation(summary = "Swagger 예시" , description = "Swagger 예시")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "vote 조회 성공" , content = @Content(schema = @Schema(implementation = GetMemberReturnDto.class))) , @ApiResponse(responseCode = "403" , description = "Forbidden" , content = @Content(schema = @Schema()))})
+    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "vote 조회 성공" , content = @Content(schema = @Schema(implementation = GetMemberReturnDto.class)))})
     @GetMapping(value = "/example")
     public GetMemberReturnDto getMember(@RequestParam(required = false) @Parameter String username , @RequestParam(required = false) @Parameter Integer age){
         return new GetMemberReturnDto("123" , 12 );
