@@ -31,5 +31,5 @@ public class VoteRestaurant {
     @Column(unique = true)
     private String voterHash;
 
-    private Integer voterImage;
+    private String voterImage;
 }
