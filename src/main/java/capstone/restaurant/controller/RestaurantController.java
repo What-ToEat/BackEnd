@@ -1,5 +1,7 @@
-package capstone.restaurant;
+package capstone.restaurant.controller;
 
+import capstone.restaurant.dto.restaurant.RestaurantListResponse;
+import capstone.restaurant.dto.restaurant.RestaurantResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

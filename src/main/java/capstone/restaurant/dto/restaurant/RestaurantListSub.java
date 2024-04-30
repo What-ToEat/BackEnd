@@ -1,4 +1,4 @@
-package capstone.restaurant;
+package capstone.restaurant.dto.restaurant;
 
 import lombok.Getter;
 import lombok.Setter;
