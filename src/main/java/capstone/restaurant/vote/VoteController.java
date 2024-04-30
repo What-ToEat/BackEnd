@@ -26,6 +26,9 @@ public class VoteController {
     @GetMapping(value = "/example")
     public ResponseEntity<ResponseDto<GetMemberReturnDto>> getMember(@RequestParam(required = false) @Parameter String username , @RequestParam(required = false) @Parameter Integer age){
 
+        if(age % 2 == 0){
+            throw new EntityNotFoundException("해당 엔티티가 없습니다");
+        }
         ResponseDto<GetMemberReturnDto> responseDto = new ResponseDto<>(201 , "CREATED" , new GetMemberReturnDto("132" , 1));
 
         return ResponseEntity.ok(responseDto);
