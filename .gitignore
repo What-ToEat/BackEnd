@@ -36,7 +36,5 @@ log
 ### VS Code ###
 .vscode/
 
-application.properties
-application-local.properties
-application-prod.properties
+.env
 logFile.log
