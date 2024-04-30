@@ -1,15 +1,14 @@
 package capstone.restaurant.voteTest;
 
-import capstone.restaurant.vote.VoteController;
-import capstone.restaurant.vote.dto.GetMemberReturnDto;
-import capstone.restaurant.vote.dto.ResponseDto;
+import capstone.restaurant.controller.VoteController;
+import capstone.restaurant.dto.GetMemberReturnDto;
+import capstone.restaurant.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.ResponseEntity;
+
 
 @SpringBootTest
 public class voteExceptionTest {

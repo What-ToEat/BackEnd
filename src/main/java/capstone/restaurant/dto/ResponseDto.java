@@ -1,4 +1,4 @@
-package capstone.restaurant.vote.dto;
+package capstone.restaurant.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +22,4 @@ public class ResponseDto<T> {
         this.message = message;
         this.data = data;
     }
-
 }

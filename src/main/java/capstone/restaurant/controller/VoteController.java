@@ -1,7 +1,7 @@
-package capstone.restaurant.vote;
+package capstone.restaurant.controller;
 
-import capstone.restaurant.vote.dto.GetMemberReturnDto;
-import capstone.restaurant.vote.dto.ResponseDto;
+import capstone.restaurant.dto.GetMemberReturnDto;
+import capstone.restaurant.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
