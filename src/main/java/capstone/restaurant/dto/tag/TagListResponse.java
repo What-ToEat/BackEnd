@@ -9,6 +9,5 @@ import java.util.List;
 @Getter
 @Setter
 public class TagListResponse {
-    @Schema(example = "\"[\\\"맛있는\\\", \\\"깨끗한\\\"]\"")
-    private List<String> tags;
+    private List<TagResponse> tags;
 }

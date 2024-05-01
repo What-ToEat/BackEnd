@@ -1,5 +1,6 @@
 package capstone.restaurant.dto.restaurant;
 
+import capstone.restaurant.dto.tag.TagResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +14,7 @@ public class RestaurantListSub {
     private String name;
     @Schema(example = "http://www.sdffff.bgrr/123t653")
     private String thumbnail;
-    @Schema(example = "\"[\\\"맛있는\\\", \\\"깨끗한\\\"]\"")
-    private List<String> tags;
+    private List<TagResponse> tags;
     @Schema(example = "qwe1245")
     private String restaurantId;
 }
