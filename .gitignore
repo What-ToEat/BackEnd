@@ -40,3 +40,4 @@ log
 logFile.log
 application-local.properties
 application-prod.properties
+generated
