@@ -2,6 +2,7 @@ package capstone.restaurant.controller;
 
 import capstone.restaurant.dto.ResponseDto;
 import capstone.restaurant.dto.RestaurantReturnDto;
+import capstone.restaurant.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,7 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/restaurant")
 public class RestaurantController {
-    public RestaurantController(){}
+
+    private final RestaurantService restaurantService;
+    public RestaurantController(RestaurantService restaurantService){
+        this.restaurantService = restaurantService;
+    }
 
     @Operation(summary = "Swagger 예시" , description = "Swagger 예시")
     @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "레스토랑 조회 완료") , @ApiResponse(responseCode = "404" , description = "없음")})
