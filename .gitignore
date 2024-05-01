@@ -38,3 +38,5 @@ log
 
 .env
 logFile.log
+application-local.properties
+application-prod.properties
