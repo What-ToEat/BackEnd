@@ -6,6 +6,9 @@ import lombok.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @SequenceGenerator(name = "TAG_SEQ_GEN" , sequenceName = "TAG_SEQUENCE")
 @Builder
 @NoArgsConstructor

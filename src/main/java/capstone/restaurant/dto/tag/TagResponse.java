@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
 
 public class TagResponse {
     @Schema(example = "양식")
