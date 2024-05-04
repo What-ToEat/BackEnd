@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -22,6 +25,11 @@ public class Restaurant {
 
     private String address;
 
+    private String thumbnail;
+
     private String name;
+
+    @OneToMany(mappedBy = "restaurant")
+    private List<RestaurantTag> restaurantTag = new ArrayList<>();
 
 }
