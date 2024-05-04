@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @SequenceGenerator(name = "TAG_SEQ_GEN" , sequenceName = "TAG_SEQUENCE")
 public class Tag {
 
