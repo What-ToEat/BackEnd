@@ -15,11 +15,11 @@ import java.util.List;
 public class TagCategory {
     @Id
     @GeneratedValue(generator = "TAG_CAT_SEQUENCE")
-
     private Long id;
 
     private String categoryName;
 
+    @Builder.Default
     @OneToMany(mappedBy = "tagCategory")
     private List<Tag> tags = new ArrayList<>();
 }

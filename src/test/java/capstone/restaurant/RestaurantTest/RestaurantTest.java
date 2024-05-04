@@ -4,8 +4,10 @@ import capstone.restaurant.dto.restaurant.RestaurantListResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.RestaurantTag;
 import capstone.restaurant.entity.Tag;
+import capstone.restaurant.entity.TagCategory;
 import capstone.restaurant.repository.RestaurantRepository;
 import capstone.restaurant.repository.RestaurantTagRepository;
+import capstone.restaurant.repository.TagCategoryRepository;
 import capstone.restaurant.repository.TagRepository;
 import capstone.restaurant.service.RestaurantService;
 import jakarta.persistence.EntityManager;
@@ -35,12 +37,15 @@ public class RestaurantTest {
     public TagRepository tagRepository;
     @Autowired
     public RestaurantService restaurantService;
+    @Autowired
+    public TagCategoryRepository tagCategoryRepository;
 
 
     @AfterEach
     public void afterEach(){
         restaurantTagRepository.deleteAll();
         restaurantRepository.deleteAll();
+        tagCategoryRepository.deleteAll();
         tagRepository.deleteAll();
     }
 
@@ -49,9 +54,12 @@ public class RestaurantTest {
         Restaurant restaurant1 = Restaurant.builder().name("abc").restaurantHash("13").build();
         Restaurant restaurant2 = Restaurant.builder().name("def").restaurantHash("12").build();
 
-        Tag tag1 = Tag.builder().tagName("맛있어요").build();
-        Tag tag2 = Tag.builder().tagName("분위기가 좋아요").build();
-        Tag tag3 = Tag.builder().tagName("넓어요").build();
+        TagCategory tagCategory = TagCategory.builder().categoryName("양식").build();
+
+        Tag tag1 = Tag.builder().tagName("맛있어요").tagCategory(tagCategory).build();
+        Tag tag2 = Tag.builder().tagName("분위기가 좋아요").tagCategory(tagCategory).build();
+        Tag tag3 = Tag.builder().tagName("넓어요").tagCategory(tagCategory).build();
+
 
         RestaurantTag rt1 = new RestaurantTag();
         rt1.setRestaurant(restaurant1);
@@ -71,6 +79,7 @@ public class RestaurantTest {
 
         restaurantRepository.save(restaurant1);
         restaurantRepository.save(restaurant2);
+        tagCategoryRepository.save(tagCategory);
         tagRepository.save(tag1);
         tagRepository.save(tag2);
         tagRepository.save(tag3);

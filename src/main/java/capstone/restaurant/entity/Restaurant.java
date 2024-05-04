@@ -30,6 +30,7 @@ public class Restaurant {
 
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantTag> restaurantTag = new ArrayList<>();
 
