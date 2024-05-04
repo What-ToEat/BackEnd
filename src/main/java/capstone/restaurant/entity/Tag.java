@@ -2,12 +2,14 @@ package capstone.restaurant.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @SequenceGenerator(name = "TAG_SEQ_GEN" , sequenceName = "TAG_SEQUENCE")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tag {
 
     @Id

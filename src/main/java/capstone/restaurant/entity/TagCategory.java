@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 @SequenceGenerator(name = "TAG_CAT_SEQ_GEN" , sequenceName = "TAG_CAT_SEQUENCE")
 public class TagCategory {
     @Id

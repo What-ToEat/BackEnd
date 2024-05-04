@@ -46,19 +46,12 @@ public class RestaurantTest {
 
     @Test
     public void test_tag_query(){
-        Restaurant restaurant1 = new Restaurant();
-        restaurant1.setName("abc");
-        restaurant1.setRestaurantHash("13");
-        Restaurant restaurant2 = new Restaurant();
-        restaurant2.setName("def");
-        restaurant2.setRestaurantHash("12");
+        Restaurant restaurant1 = Restaurant.builder().name("abc").restaurantHash("13").build();
+        Restaurant restaurant2 = Restaurant.builder().name("def").restaurantHash("12").build();
 
-        Tag tag1 = new Tag();
-        tag1.setTagName("맛있어요");
-        Tag tag2 = new Tag();
-        tag2.setTagName("분위기가 좋아요");
-        Tag tag3 = new Tag();
-        tag3.setTagName("넓어요");
+        Tag tag1 = Tag.builder().tagName("맛있어요").build();
+        Tag tag2 = Tag.builder().tagName("분위기가 좋아요").build();
+        Tag tag3 = Tag.builder().tagName("넓어요").build();
 
         RestaurantTag rt1 = new RestaurantTag();
         rt1.setRestaurant(restaurant1);
