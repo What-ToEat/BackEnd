@@ -13,9 +13,4 @@ public class TagResponse {
     @Schema(example = "음식 종류")
     private String category;
 
-    public TagResponse(String name , String category){
-        this.name = name;
-        this.category = category;
-    }
-
 }

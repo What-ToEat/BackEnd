@@ -45,8 +45,8 @@ public class RestaurantTest {
     public void afterEach(){
         restaurantTagRepository.deleteAll();
         restaurantRepository.deleteAll();
-        tagCategoryRepository.deleteAll();
         tagRepository.deleteAll();
+        tagCategoryRepository.deleteAll();
     }
 
     @Test

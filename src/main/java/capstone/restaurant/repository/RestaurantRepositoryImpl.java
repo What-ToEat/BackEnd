@@ -4,9 +4,7 @@ import capstone.restaurant.dto.restaurant.RestaurantListSub;
 import capstone.restaurant.dto.tag.TagResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.RestaurantTag;
-import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
