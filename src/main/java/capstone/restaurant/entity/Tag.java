@@ -7,12 +7,11 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @SequenceGenerator(name = "TAG_SEQ_GEN" , sequenceName = "TAG_SEQUENCE")
 public class Tag {
 
     @Id
-    @GeneratedValue(generator = "TAG_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String tagName;

@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "restaurants", description = "식당 조회 API")
 @RestController
 @RequestMapping("api/restaurants")
 public class RestaurantController {
+
 
     private final RestaurantService restaurantService;
     public RestaurantController(RestaurantService restaurantService){
@@ -29,6 +31,9 @@ public class RestaurantController {
 
         RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFind(place , tags  , page);
         return new ResponseDto<>(201, "ok", restaurantListResponse);
+
+
+
     }
 
     @Operation(summary = "식당 상세 조회", description = "식당의 상세정보를 조회한다.")
