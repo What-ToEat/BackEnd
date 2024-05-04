@@ -40,7 +40,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
             List<TagResponse> tagResponseList = new ArrayList<>();
 
             for(RestaurantTag tag: item.getRestaurantTag()){
-                tagResponseList.add(new TagResponse(tag.getTag().getTagName() , "양식"));
+                tagResponseList.add(new TagResponse(tag.getTag().getTagName() , tag.getTag().getTagCategory().getCategoryName()));
             }
 
             RestaurantListSub restaurantListSub = new RestaurantListSub();
