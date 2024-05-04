@@ -6,9 +6,16 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
+
 public class TagResponse {
     @Schema(example = "양식")
     private String name;
     @Schema(example = "음식 종류")
     private String category;
+
+    public TagResponse(String name , String category){
+        this.name = name;
+        this.category = category;
+    }
+
 }

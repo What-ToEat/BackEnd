@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseDto<T> {
+public class ResponseDto <T> {
 
     private Integer statusCode;
     private String message;

@@ -10,10 +10,13 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @SequenceGenerator(name = "TAG_SEQ_GEN" , sequenceName = "TAG_SEQUENCE")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "TAG_SEQ_GEN")
     private long id;
 
     private String tagName;
