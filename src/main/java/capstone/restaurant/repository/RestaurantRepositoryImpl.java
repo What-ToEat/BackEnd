@@ -22,7 +22,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
     }
 
     @Override
-    public List<RestaurantListSub> findRestaurantListByTagOrKeyWord(String place , String[] tags , String search , int page) {
+    public List<RestaurantListSub> findRestaurantListByTagOrKeyWord(String place , String[] tags , int page) {
 
         List<Restaurant> query = queryFactory.select(restaurantTag.restaurant)
                 .from(restaurantTag)
@@ -48,7 +48,6 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
             rls.setTags(tagResponseList);
             rls.setRestaurantId(item.getRestaurantHash());
             result.add(rls);
-            System.out.println("rls.toString() = " + rls.toString());
         }
 
 

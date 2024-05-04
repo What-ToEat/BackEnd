@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RestaurantRepositoryCustom {
 
-    List<RestaurantListSub> findRestaurantListByTagOrKeyWord(String place , String[] tags , String search , int page);
+    List<RestaurantListSub> findRestaurantListByTagOrKeyWord(String place , String[] tags ,  int page);
 }

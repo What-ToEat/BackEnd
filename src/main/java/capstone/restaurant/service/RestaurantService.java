@@ -13,10 +13,11 @@ public class RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public RestaurantListResponse restaurantListFind(String place , String[] tags , String search , int page){
+    @Transactional
+    public RestaurantListResponse restaurantListFind(String place , String[] tags , int page){
 
         RestaurantListResponse response = new RestaurantListResponse();
-        response.setRestaurants(this.restaurantRepository.findRestaurantListByTagOrKeyWord(place , tags  ,search , page));
+        response.setRestaurants(this.restaurantRepository.findRestaurantListByTagOrKeyWord(place , tags , page));
         return response;
     }
 }

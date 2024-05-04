@@ -88,7 +88,7 @@ public class RestaurantTest {
 
         String[] list  = {"맛있어요" , "넓어요"};
 
-        RestaurantListResponse response = restaurantService.restaurantListFind("", list, "", 0);
+        RestaurantListResponse response = restaurantService.restaurantListFind("", list, 0);
 
         Assertions.assertThat(response.getRestaurants().get(0).getRestaurantId()).isEqualTo("12");
 

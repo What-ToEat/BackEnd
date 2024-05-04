@@ -25,10 +25,9 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDto<RestaurantListResponse> getRestaurantList(@Parameter(example = "홍대", description = "조회하고 싶은 장소") @RequestParam(required = false) String place,
                                                                  @Parameter(example = "맛집", description = "조회하고 싶은 태그, 여러 태그를 조회하려면 여러번 쓴다.") @RequestParam(required = false) String[] tags,
-                                                                 @Parameter(example = "롯데리아", description = "검색하고 싶은 단어") @RequestParam(required = false) String search,
                                                                  @Parameter(example = "1", description = "조회하려는 페이지 번호, 기본으로 1") @RequestParam(required = false, defaultValue = "1") int page) {
 
-        RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFind(place , tags , search , page);
+        RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFind(place , tags  , page);
         return new ResponseDto<>(201, "ok", restaurantListResponse);
     }
 
