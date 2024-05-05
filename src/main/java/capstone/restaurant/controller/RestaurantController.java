@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
+
 @Tag(name = "restaurants", description = "식당 조회 API")
 @RestController
 @RequestMapping("api/restaurants")
@@ -36,8 +38,9 @@ public class RestaurantController {
     }
 
     @GetMapping("/keyword")
-    public ResponseDto<RestaurantListResponse> getRestaurantListByKeyword(@Parameter(example = "롯데리아" , description = "검색 키워드") @RequestParam(required = false) String keyword){
-        RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListResponseByKeyword(keyword);
+    public ResponseDto<RestaurantListResponse> getRestaurantListByKeyword(@Parameter(example = "롯데리아" , description = "검색 키워드") @RequestParam(required = false) String keyword,
+                                                                          @Parameter(example = "1", description = "조회하려는 페이지 번호, 기본으로 1") @RequestParam(required = false, defaultValue = "1") int page){
+        RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListResponseByKeyword(keyword , page);
         return new ResponseDto<>(200, "ok" , restaurantListResponse);
     }
 

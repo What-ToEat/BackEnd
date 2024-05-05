@@ -4,6 +4,9 @@ import capstone.restaurant.dto.restaurant.RestaurantListResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +24,10 @@ public class RestaurantService {
         return response;
     }
 
-    public RestaurantListResponse restaurantListResponseByKeyword(String keyword){
+    public RestaurantListResponse restaurantListResponseByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
-        Restaurant restaurant = restaurantRepository.findRestaurantsByNameContaining(keyword);
-        System.out.println("restaurant.toString() = " + restaurant.toString());
+        restaurantRepository.findRestaurantsByNameContaining(keyword , PageRequest.of(5 , page - 1));
+
         return response;
     }
 }
