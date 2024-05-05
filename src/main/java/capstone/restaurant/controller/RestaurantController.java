@@ -29,7 +29,7 @@ public class RestaurantController {
                                                                  @Parameter(example = "맛집", description = "조회하고 싶은 태그, 여러 태그를 조회하려면 여러번 쓴다.") @RequestParam(required = false) String[] tags,
                                                                  @Parameter(example = "1", description = "조회하려는 페이지 번호, 기본으로 1") @RequestParam(required = false, defaultValue = "1") int page) {
 
-        RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFind(place , tags  , page);
+        RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFindByTag(place , tags  , page);
 
         return new ResponseDto<>(200, "ok", restaurantListResponse);
 
@@ -37,7 +37,8 @@ public class RestaurantController {
 
     @GetMapping("/keyword")
     public ResponseDto<RestaurantListResponse> getRestaurantListByKeyword(@Parameter(example = "롯데리아" , description = "검색 키워드") @RequestParam(required = false) String keyword){
-        return new ResponseDto<>(200, "ok" , new ResponseDto<RestaurantResponse>);
+        RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListResponseByKeyword(keyword);
+        return new ResponseDto<>(200, "ok" , restaurantListResponse);
     }
 
     @Operation(summary = "식당 상세 조회", description = "식당의 상세정보를 조회한다.")
