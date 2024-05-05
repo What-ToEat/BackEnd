@@ -14,8 +14,13 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ResponseDto<Void>> handleInternalServerError(EntityNotFoundException exception) {
-        ResponseDto<Void> responseDto = new ResponseDto<>(404 , exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
+    public ResponseDto<Void> handleInternalServerError(EntityNotFoundException exception) {
+        return new ResponseDto<>(404 , exception.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseDto<Void> IllegalArgumentException(IllegalArgumentException exception){
+        return new ResponseDto<>(400 , exception.getMessage());
     }
 }

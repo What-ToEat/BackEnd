@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(
