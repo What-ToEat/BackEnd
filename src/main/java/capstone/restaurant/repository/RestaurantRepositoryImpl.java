@@ -28,7 +28,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
                 .where(restaurantTag.tag.tagName.in(tags))
                 .groupBy(restaurantTag.restaurant)
                 .having(restaurantTag.restaurant.count().eq((long) tags.length))
-                .offset((long) page * unit)
+                .offset((long) (page - 1) * unit)
                 .limit(unit)
                 .fetch();
 
@@ -48,7 +48,6 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
             restaurantListSub.setRestaurantId(item.getRestaurantHash());
             result.add(restaurantListSub);
         }
-
 
         return result;
     }
