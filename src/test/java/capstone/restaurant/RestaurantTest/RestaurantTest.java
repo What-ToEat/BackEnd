@@ -61,7 +61,6 @@ public class RestaurantTest {
         Tag tag2 = Tag.builder().tagName("분위기가 좋아요").tagCategory(tagCategory).build();
         Tag tag3 = Tag.builder().tagName("넓어요").tagCategory(tagCategory).build();
 
-
         RestaurantTag rt1 = new RestaurantTag();
         rt1.setRestaurant(restaurant1);
         rt1.setTag(tag1);
@@ -78,20 +77,18 @@ public class RestaurantTest {
         rt4.setRestaurant(restaurant2);
         rt4.setTag(tag3);
 
-        restaurantRepository.save(restaurant1);
-        restaurantRepository.save(restaurant2);
+        Restaurant[] restaurants = {restaurant1 , restaurant2};
+        Tag[] tags = {tag1 , tag2 , tag3};
+        RestaurantTag[] restaurantTags = {rt1 , rt2 , rt3 , rt4};
+
+        restaurantRepository.saveAll(Arrays.asList(restaurants));
         tagCategoryRepository.save(tagCategory);
-        tagRepository.save(tag1);
-        tagRepository.save(tag2);
-        tagRepository.save(tag3);
-        restaurantTagRepository.save(rt1);
-        restaurantTagRepository.save(rt2);
-        restaurantTagRepository.save(rt3);
-        restaurantTagRepository.save(rt4);
+        tagRepository.saveAll(Arrays.asList(tags));
+        restaurantTagRepository.saveAll(Arrays.asList(restaurantTags));
 
         String[] list  = {"맛있어요" , "넓어요"};
 
-        RestaurantListResponse response = restaurantService.restaurantListFindByTag("", list, 0);
+        RestaurantListResponse response = restaurantService.restaurantListFindByTag("", list, 1);
 
         Assertions.assertThat(response.getRestaurants().get(0).getRestaurantId()).isEqualTo("12");
 
