@@ -1,5 +1,6 @@
 package capstone.restaurant.exceptionHandler;
 
+import capstone.restaurant.controller.RestaurantController;
 import capstone.restaurant.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseDto<Void> handleInternalServerError(EntityNotFoundException exception) {
-        return new ResponseDto<>(404 , exception.getMessage());
+    public ResponseEntity<ResponseDto<Void>> handleInternalServerError(EntityNotFoundException exception) {
+        ResponseDto<Void> responseDto = new ResponseDto<>(404 , exception.getMessage());
+        return ResponseEntity.status(404).body(responseDto);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseDto<Void> IllegalArgumentException(IllegalArgumentException exception){
-        return new ResponseDto<>(400 , exception.getMessage());
+    public ResponseEntity<ResponseDto<Void>> IllegalArgumentException(IllegalArgumentException exception){
+        ResponseDto<Void> responseDto = new ResponseDto<>(400 , exception.getMessage());
+        return ResponseEntity.status(400).body(responseDto);
     }
 }
