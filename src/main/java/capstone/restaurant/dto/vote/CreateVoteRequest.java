@@ -3,6 +3,7 @@ package capstone.restaurant.dto.vote;
 import capstone.restaurant.entity.Vote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @ToString
 public class CreateVoteRequest {
     @NotNull
