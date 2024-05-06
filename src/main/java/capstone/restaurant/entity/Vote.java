@@ -2,8 +2,6 @@ package capstone.restaurant.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @SequenceGenerator(
         name= "VOTE_SEQ_GEN",
         sequenceName = "VOTE_SEQ")
@@ -30,7 +27,9 @@ public class Vote {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "vote" , cascade = {CascadeType.REMOVE})
-    private List<VoteRestaurant> voteRestaurantList = new ArrayList<VoteRestaurant>();
+    @OneToMany(mappedBy = "vote")
+    private List<Voter> voters = new ArrayList<>();
 
+    @OneToMany(mappedBy = "vote")
+    private List<VoteOption> voteOptions = new ArrayList<>();
 }
