@@ -19,6 +19,8 @@ public class Voter {
 
     private String nickname;
 
+    private int profileImage;
+
     @ManyToOne
     @JoinColumn(name="vote_id")
     private Vote vote;
