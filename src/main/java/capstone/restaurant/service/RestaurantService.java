@@ -3,9 +3,12 @@ package capstone.restaurant.service;
 import capstone.restaurant.dto.restaurant.RestaurantListResponse;
 import capstone.restaurant.dto.restaurant.RestaurantListSub;
 import capstone.restaurant.dto.restaurant.RestaurantResponse;
+import capstone.restaurant.dto.restaurant.ReviewListSub;
 import capstone.restaurant.dto.tag.TagResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.RestaurantTag;
+import capstone.restaurant.entity.Review;
+import capstone.restaurant.entity.Tag;
 import capstone.restaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,12 +38,12 @@ public class RestaurantService {
     public RestaurantListResponse restaurantListFindByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
 
-        Page<Restaurant> restaurantList = restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
-        response.setRestaurants(convertEntitiesToDto(restaurantList));
+        Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
+        response.setRestaurants(convertEntitiesToDto1(restaurantList));
         return response;
     }
 
-    private List<RestaurantListSub> convertEntitiesToDto(Page<Restaurant> restaurantList){
+    private List<RestaurantListSub> convertEntitiesToDto1(Page<Restaurant> restaurantList){
 
         List<RestaurantListSub> restaurantListSubs = new ArrayList<RestaurantListSub>();
         List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
@@ -61,7 +64,25 @@ public class RestaurantService {
         return restaurantListSubs;
     }
 
-    public RestaurantResponse restaurantFindById(){
+    public RestaurantResponse restaurantFindById(String restaurantId) {
 
+        Restaurant restaurant = this.restaurantRepository.findRestaurantByRestaurantHash(restaurantId);
+        return convertEntitiesToDto2(restaurant);
+    }
+
+    private RestaurantResponse convertEntitiesToDto2(Restaurant restaurant){
+        List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
+
+        for (RestaurantTag restaurantTag : restaurant.getRestaurantTag()) {
+            tagResponseList.add(new TagResponse(restaurantTag.getTag().getTagName() , restaurantTag.getTag().getTagCategory().getCategoryName()));
+        }
+
+        List<ReviewListSub> reviewList = new ArrayList<>();
+
+        for (Review review : restaurant.getReviews()){
+            reviewList.add(new ReviewListSub(review.getReview() , review.getIsAiReview()));
+        }
+
+        return new RestaurantResponse(restaurant.getName() , restaurant.getThumbnail() , tagResponseList , restaurant.getRestaurantHash() , reviewList);
     }
 }
