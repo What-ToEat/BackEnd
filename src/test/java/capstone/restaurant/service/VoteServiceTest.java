@@ -53,4 +53,31 @@ class VoteServiceTest {
         verify(restaurantRepository, times(2)).findByRestaurantHash(any());
         verify(voteOptionRepository, times(2)).save(any());
     }
+
+    @Test
+    @DisplayName("[createVote] 없는 식당을 옵션으로 등록하려는 경우 실패")
+    void createVoteFailTest() {
+        // Given
+        List<String> restaurants = Arrays.asList("qwe123qw", "asd123as");
+        CreateVoteRequest createVoteRequest = CreateVoteRequest.builder()
+                .title("Test")
+                .kakaoId(null)
+                .allowDuplicateVote(true)
+                .expiresAt(LocalDateTime.now())
+                .restaurants(restaurants)
+                .build();
+        when(voteRepository.save(any())).thenReturn(createVoteRequest.toVoteEntity());
+        when(restaurantRepository.findByRestaurantHash(any())).thenReturn(new Restaurant());
+        when(restaurantRepository.findByRestaurantHash("asd123as")).thenReturn(null);
+
+        // When
+        assertThrows(Exception.class, () -> {
+            voteService.createVote(createVoteRequest);
+        });
+
+        // Then
+        verify(voteRepository).save(any());
+        verify(restaurantRepository, times(2)).findByRestaurantHash(any());
+        verify(voteOptionRepository, times(1)).save(any());
+    }
 }
