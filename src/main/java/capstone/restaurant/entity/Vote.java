@@ -29,9 +29,9 @@ public class Vote {
 
     private Boolean allowDuplicateVote;
 
-    @OneToMany(mappedBy = "vote")
+    @OneToMany(mappedBy = "vote", cascade = CascadeType.REMOVE)
     private List<Voter> voters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vote")
+    @OneToMany(mappedBy = "vote", cascade = CascadeType.REMOVE)
     private List<VoteOption> voteOptions = new ArrayList<>();
 }

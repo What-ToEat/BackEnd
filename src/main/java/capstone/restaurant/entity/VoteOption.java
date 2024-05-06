@@ -28,6 +28,6 @@ public class VoteOption {
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "voteOption")
+    @OneToMany(mappedBy = "voteOption", cascade = CascadeType.REMOVE)
     private List<VoteResult> voteResults = new ArrayList<>();
 }
