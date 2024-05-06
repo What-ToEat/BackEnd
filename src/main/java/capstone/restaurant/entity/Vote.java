@@ -21,7 +21,7 @@ public class Vote {
     @Column(unique = true)
     private String voteHash;
 
-    private String voteName;
+    private String title;
 
     private LocalDateTime expireAt;
 
