@@ -3,6 +3,9 @@ package capstone.restaurant.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -19,4 +22,7 @@ public class Voter {
     @ManyToOne
     @JoinColumn(name="vote_id")
     private Vote vote;
+
+    @OneToMany(mappedBy = "voter")
+    private List<VoteResult> voteResult = new ArrayList<>();
 }

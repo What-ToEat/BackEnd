@@ -6,28 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@SequenceGenerator(name = "VOTE_OPTION_SEQ_GEN" , sequenceName = "VOTE_OPTION_SEQUENCE")
-public class VoteOption {
+@SequenceGenerator(name = "VOTE_RESULT_SEQ_GEN" , sequenceName = "VOTE_RESULT_SEQUENCE")
+@Table(
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"vote_option_id", "voter_id"})}
+)
+public class VoteResult {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "VOTE_OPTION_SEQUENCE")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="vote_id")
-    private Vote vote;
+    @JoinColumn(name="vote_option_id")
+    private VoteOption voteOption;
 
     @ManyToOne
-    @JoinColumn(name="restaurant_id")
-    private Restaurant restaurant;
-
-    @OneToMany(mappedBy = "voteOption")
-    private List<VoteResult> voteResults = new ArrayList<>();
+    @JoinColumn(name="voter_id")
+    private Voter voter;
 }
