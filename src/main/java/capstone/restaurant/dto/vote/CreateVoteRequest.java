@@ -1,13 +1,15 @@
 package capstone.restaurant.dto.vote;
 
+import capstone.restaurant.entity.Vote;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,8 +23,19 @@ public class CreateVoteRequest {
     @NotNull
     private Boolean allowDuplicateVote;
     @NotNull
-    private Date expiresAt;
+    private LocalDateTime expiresAt;
     @NotNull
     @Schema(example = "\"[\\\"qwert\\\", \\\"asdfg\\\"]\"", description = "투표의 옵션으로 넣고 싶은 식당의 restaurantHash 값을 추가한다.")
     private List<String> restaurants;
+
+    public Vote toVoteEntity() {
+        String voteHash = UUID.randomUUID().toString().substring(0,8);
+        return Vote.builder()
+                .title(title)
+                .voteHash(voteHash)
+                .kakaoId(kakaoId)
+                .allowDuplicateVote(allowDuplicateVote)
+                .expireAt(expiresAt)
+                .build();
+    }
 }
