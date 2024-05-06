@@ -51,7 +51,7 @@ public class RestaurantController {
 
         if(page <= 0) throw new IllegalArgumentException("page 는 0보다 큰 정수이어야 합니다");
 
-        RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListResponseByKeyword(keyword , page);
+        RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListFindByKeyword(keyword , page);
 
         return new ResponseDto<>(200, "ok" , restaurantListResponse);
     }

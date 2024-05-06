@@ -2,6 +2,7 @@ package capstone.restaurant.service;
 
 import capstone.restaurant.dto.restaurant.RestaurantListResponse;
 import capstone.restaurant.dto.restaurant.RestaurantListSub;
+import capstone.restaurant.dto.restaurant.RestaurantResponse;
 import capstone.restaurant.dto.tag.TagResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.RestaurantTag;
@@ -31,7 +32,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantListResponse restaurantListResponseByKeyword(String keyword , Integer page){
+    public RestaurantListResponse restaurantListFindByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
 
         Page<Restaurant> restaurantList = restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
@@ -58,5 +59,9 @@ public class RestaurantService {
             restaurantListSubs.add(restaurantListSub);
         }
         return restaurantListSubs;
+    }
+
+    public RestaurantResponse restaurantFindById(){
+
     }
 }
