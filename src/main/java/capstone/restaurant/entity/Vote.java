@@ -25,7 +25,9 @@ public class Vote {
 
     private LocalDateTime expireAt;
 
-    private String phoneNumber;
+    private String kakaoId;
+
+    private Boolean allowDuplicateVote;
 
     @OneToMany(mappedBy = "vote")
     private List<Voter> voters = new ArrayList<>();
