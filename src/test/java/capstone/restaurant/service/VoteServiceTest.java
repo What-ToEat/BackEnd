@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +39,7 @@ class VoteServiceTest {
                 .title("Test")
                 .kakaoId(null)
                 .allowDuplicateVote(true)
-                .expiresAt(LocalDateTime.now())
+                .expirationTime(1)
                 .restaurants(restaurants)
                 .build();
         when(voteRepository.save(any())).thenReturn(createVoteRequest.toVoteEntity());
@@ -63,7 +62,7 @@ class VoteServiceTest {
                 .title("Test")
                 .kakaoId(null)
                 .allowDuplicateVote(true)
-                .expiresAt(LocalDateTime.now())
+                .expirationTime(1)
                 .restaurants(restaurants)
                 .build();
         when(voteRepository.save(any())).thenReturn(createVoteRequest.toVoteEntity());
@@ -71,9 +70,7 @@ class VoteServiceTest {
         when(restaurantRepository.findByRestaurantHash("asd123as")).thenReturn(null);
 
         // When
-        assertThrows(Exception.class, () -> {
-            voteService.createVote(createVoteRequest);
-        });
+        assertThrows(Exception.class, () -> voteService.createVote(createVoteRequest));
 
         // Then
         verify(voteRepository).save(any());

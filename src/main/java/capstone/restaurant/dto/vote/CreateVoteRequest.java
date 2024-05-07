@@ -25,7 +25,7 @@ public class CreateVoteRequest {
     @NotNull
     private Boolean allowDuplicateVote;
     @NotNull
-    private LocalDateTime expiresAt;
+    private int expirationTime;
     @NotNull
     @Schema(example = "\"[\\\"qwert\\\", \\\"asdfg\\\"]\"", description = "투표의 옵션으로 넣고 싶은 식당의 restaurantHash 값을 추가한다.")
     private List<String> restaurants;
@@ -37,7 +37,7 @@ public class CreateVoteRequest {
                 .voteHash(voteHash)
                 .kakaoId(kakaoId)
                 .allowDuplicateVote(allowDuplicateVote)
-                .expireAt(expiresAt)
+                .expireAt(LocalDateTime.now().plusHours(expirationTime))
                 .build();
     }
 }
