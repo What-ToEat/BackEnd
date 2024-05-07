@@ -46,6 +46,22 @@ class VoteControllerTest {
         resultActions.andExpect(status().isCreated());
     }
 
+    @Test
+    @DisplayName("POST /api/votes : 투표 생성 실패. 등록되지 않은 식당 등록")
+    void createVoteFailTest() throws Exception {
+        // given
+        registerRestaurant(2);
+
+        ResultActions resultActions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/api/vote")
+                        .contentType("application/json")
+                        .content("{\"title\": \"동창회 식당 정하기\", \"kakaoId\": \"akssrt163\", \"allowDuplicateVote\": true, \"expiresAt\": \"2024-05-06T13:34:58.987Z\", \"restaurants\": [ \"hash0\", \"hash2\" ]\n}")
+                        .accept(MediaType.ALL)
+        );
+        resultActions.andExpect(status().isNotFound());
+    }
+
     private void registerRestaurant(int count) {
         for (int i = 0; i < count; i++) {
             Restaurant restaurant = Restaurant.builder()

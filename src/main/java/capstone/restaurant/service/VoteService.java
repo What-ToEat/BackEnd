@@ -8,6 +8,7 @@ import capstone.restaurant.entity.VoteOption;
 import capstone.restaurant.repository.RestaurantRepository;
 import capstone.restaurant.repository.VoteOptionRepository;
 import capstone.restaurant.repository.VoteRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class VoteService {
         restaurants.forEach(restaurantHash -> {
             Restaurant restaurant = restaurantRepository.findByRestaurantHash(restaurantHash);
             if (restaurant == null) {
-                throw new IllegalArgumentException(restaurantHash + " Not Found");
+                throw new EntityNotFoundException(restaurantHash + " Not Found");
             }
             VoteOption voteOption = VoteOption.builder()
                     .vote(vote)
