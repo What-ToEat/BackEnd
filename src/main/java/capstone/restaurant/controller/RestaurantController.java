@@ -59,7 +59,7 @@ public class RestaurantController {
     @Operation(summary = "식당 상세 조회", description = "식당의 상세정보를 조회한다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "태그로 레스토랑 리스트 조회 성공") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
+    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "id 로 상세 레스토랑 정보 반환") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
     public ResponseDto<RestaurantResponse> getRestaurant(@PathVariable String id) {
         RestaurantResponse restaurantResponse = this.restaurantService.restaurantFindById(id);
         return new ResponseDto<>(200, "ok", restaurantResponse);

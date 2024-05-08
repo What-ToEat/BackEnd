@@ -10,6 +10,7 @@ import capstone.restaurant.entity.RestaurantTag;
 import capstone.restaurant.entity.Review;
 import capstone.restaurant.entity.Tag;
 import capstone.restaurant.repository.RestaurantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,9 +65,15 @@ public class RestaurantService {
         return restaurantListSubs;
     }
 
+    @Transactional
     public RestaurantResponse restaurantFindById(String restaurantId) {
 
         Restaurant restaurant = this.restaurantRepository.findRestaurantByRestaurantHash(restaurantId);
+
+        if(restaurant == null){
+            throw new EntityNotFoundException("해당 레스토랑을 찾을 수 없습니다");
+        }
+
         return convertEntitiesToDto2(restaurant);
     }
 
