@@ -35,4 +35,8 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantTag> restaurantTag = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "restaurant")
+    private  List<Review> reviews = new ArrayList<>();
+
 }
