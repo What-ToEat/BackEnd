@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class createVoteUserRequest {
+public class CreateVoteUserRequest {
 
     @NotNull
     @Schema(example = "이광훈")
