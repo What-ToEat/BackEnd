@@ -24,4 +24,9 @@ public class VoteController {
         CreateVoteResponse createVoteResponse = voteService.createVote(createVoteRequest);
         return new ResponseDto<>(201, "Created", createVoteResponse);
     }
+
+    @PostMapping("/{id}")
+    public ResponseDto<> createVoteUser(@RequestBody String nickname){
+
+    }
 }
