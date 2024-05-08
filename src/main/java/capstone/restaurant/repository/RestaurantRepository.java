@@ -13,4 +13,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> , 
 
     Restaurant findRestaurantByRestaurantHash(String restaurantId);
 
+    Restaurant findByRestaurantHash(String restaurantHash);
+
+
 }
