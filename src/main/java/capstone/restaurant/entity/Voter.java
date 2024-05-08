@@ -21,8 +21,6 @@ public class Voter {
 
     private int profileImage;
 
-    private String voterHash;
-
     @ManyToOne
     @JoinColumn(name="vote_id")
     private Vote vote;
