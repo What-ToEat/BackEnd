@@ -76,6 +76,8 @@ public class VoteService {
     public FindVoteResponse findVote(String voteId){
         Vote vote = this.voteRepository.findByVoteHash(voteId);
 
+        if(vote == null) throw new EntityNotFoundException("없는 투표입니다");
+
         return FindVoteResponse.builder()
                 .title(vote.getTitle())
                 .allowDuplicateVote(vote.getAllowDuplicateVote())
