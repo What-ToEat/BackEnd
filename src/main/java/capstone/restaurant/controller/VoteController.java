@@ -7,6 +7,8 @@ import capstone.restaurant.dto.vote.CreateVoteUserRequest;
 import capstone.restaurant.dto.vote.CreateVoteUserResponse;
 import capstone.restaurant.service.VoteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +36,7 @@ public class VoteController {
     @Operation(summary = "투표 참여" , description = "투표에 참여한다.")
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "레스토랑 투표 참여") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
     public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest , @PathVariable("id") String voteHash , HttpServletResponse response){
 
         CreateVoteUserResponse createVoteUserResponse = voteService.createVoteUser(createVoteUserRequest , voteHash);
