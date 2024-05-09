@@ -40,11 +40,11 @@ public class RestaurantService {
         RestaurantListResponse response = new RestaurantListResponse();
 
         Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
-        response.setRestaurants(convertEntitiesToDto1(restaurantList));
+        response.setRestaurants(convertRestaurantsToRestaurantList(restaurantList));
         return response;
     }
 
-    private List<RestaurantListSub> convertEntitiesToDto1(Page<Restaurant> restaurantList){
+    private List<RestaurantListSub> convertRestaurantsToRestaurantList(Page<Restaurant> restaurantList){
 
         List<RestaurantListSub> restaurantListSubs = new ArrayList<RestaurantListSub>();
         List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
@@ -68,16 +68,16 @@ public class RestaurantService {
     @Transactional
     public RestaurantResponse restaurantFindById(String restaurantId) {
 
-        Restaurant restaurant = this.restaurantRepository.findRestaurantByRestaurantHash(restaurantId);
+        Restaurant restaurant = this.restaurantRepository.findByRestaurantHash(restaurantId);
 
         if(restaurant == null){
             throw new EntityNotFoundException("해당 레스토랑을 찾을 수 없습니다");
         }
 
-        return convertEntitiesToDto2(restaurant);
+        return convertRestaurantToRestaurantResponse(restaurant);
     }
 
-    private RestaurantResponse convertEntitiesToDto2(Restaurant restaurant){
+    private RestaurantResponse convertRestaurantToRestaurantResponse(Restaurant restaurant){
         List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
 
         for (RestaurantTag restaurantTag : restaurant.getRestaurantTag()) {
