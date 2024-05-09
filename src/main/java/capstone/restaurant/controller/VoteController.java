@@ -49,4 +49,12 @@ public class VoteController {
         response.addCookie(cookie);
         return new ResponseDto<>(201 , "Created" ,createVoteUserResponse);
     }
+
+    @Operation(summary = "투표 조회" , description = "투표를 조회한다.")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto<Void> findVote(@PathVariable("id") String voteId){
+        this.voteService.findVote(voteId);
+        return new ResponseDto<>(200 , "ok");
+    }
 }
