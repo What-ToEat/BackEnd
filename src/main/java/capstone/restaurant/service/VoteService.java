@@ -58,11 +58,13 @@ public class VoteService {
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
         Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
-        Long cookieExpireAt = Duration.between(LocalDateTime.now() , vote.getExpireAt()).getSeconds();
 
         if(vote == null){
             throw new EntityNotFoundException("없는 투표입니다");
         }
+
+        Long cookieExpireAt = Duration.between(LocalDateTime.now() , vote.getExpireAt()).getSeconds();
+
 
         Voter voter = Voter.builder()
                 .nickname(createVoteUserRequest.getUserName())
