@@ -50,6 +50,7 @@ public class VoteController {
     @Operation(summary = "투표 조회" , description = "투표를 조회한다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "투표 조회 성공") , @ApiResponse(responseCode = "404" , description = "투표를 찾을 수 없음")})
     public ResponseDto<FindVoteResponse> findVote(@PathVariable("id") String voteId){
         FindVoteResponse findVoteResponse = this.voteService.findVote(voteId);
         return new ResponseDto<>(200 , "ok" , findVoteResponse);
