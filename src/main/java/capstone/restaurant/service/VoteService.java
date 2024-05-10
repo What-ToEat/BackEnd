@@ -56,7 +56,6 @@ public class VoteService {
 
         Long cookieExpireAt = Duration.between(LocalDateTime.now() , vote.getExpireAt()).getSeconds();
 
-
         Voter voter = Voter.builder()
                 .nickname(createVoteUserRequest.getUserName())
                 .profileImage(createVoteUserRequest.getUserImage())
