@@ -38,6 +38,7 @@ public class Vote {
     @OneToMany(mappedBy = "vote", cascade = CascadeType.REMOVE)
     private List<Voter> voters = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "vote", cascade = CascadeType.REMOVE)
     private List<VoteOption> voteOptions = new ArrayList<>();
 }

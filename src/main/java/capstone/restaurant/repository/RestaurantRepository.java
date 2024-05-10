@@ -11,8 +11,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> , 
 
     Page<Restaurant> findRestaurantsByNameContaining(String name , Pageable pageable);
 
-    Restaurant findRestaurantByRestaurantHash(String restaurantId);
-
     Restaurant findByRestaurantHash(String restaurantHash);
 
 

@@ -1,13 +1,7 @@
 package capstone.restaurant.service;
 
-import capstone.restaurant.dto.vote.CreateVoteRequest;
-import capstone.restaurant.dto.vote.CreateVoteResponse;
-import capstone.restaurant.dto.vote.CreateVoteUserRequest;
-import capstone.restaurant.dto.vote.CreateVoteUserResponse;
-import capstone.restaurant.entity.Restaurant;
-import capstone.restaurant.entity.Vote;
-import capstone.restaurant.entity.VoteOption;
-import capstone.restaurant.entity.Voter;
+import capstone.restaurant.dto.vote.*;
+import capstone.restaurant.entity.*;
 import capstone.restaurant.repository.RestaurantRepository;
 import capstone.restaurant.repository.VoteOptionRepository;
 import capstone.restaurant.repository.VoteRepository;
@@ -19,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -57,14 +48,13 @@ public class VoteService {
 
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
-        Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
+        Vote vote = this.voteRepository.findByVoteHash(voteHash);
 
         if(vote == null){
             throw new EntityNotFoundException("없는 투표입니다");
         }
 
         Long cookieExpireAt = Duration.between(LocalDateTime.now() , vote.getExpireAt()).getSeconds();
-
 
         Voter voter = Voter.builder()
                 .nickname(createVoteUserRequest.getUserName())
@@ -79,6 +69,54 @@ public class VoteService {
         createVoteUserResponse.setCookieDuration(cookieExpireAt);
 
         return createVoteUserResponse;
+    }
+
+    @Transactional
+    public FindVoteResponse findVote(String voteId){
+        Vote vote = this.voteRepository.findByVoteHash(voteId);
+
+        if(vote == null) throw new EntityNotFoundException("없는 투표입니다");
+
+        return FindVoteResponse.builder()
+                .title(vote.getTitle())
+                .allowDuplicateVote(vote.getAllowDuplicateVote())
+                .expireAt(vote.getExpireAt())
+                .voteHash(vote.getVoteHash())
+                .voteOptionInfoList(convertVoteEntityToOptionSub(vote))
+                .build();
+    }
+
+    private List<FindVoteOptionSub> convertVoteEntityToOptionSub(Vote vote){
+
+        List<FindVoteOptionSub> findVoteOptionSubList = new ArrayList<>();
+
+        for (VoteOption voteOption : vote.getVoteOptions()) {
+            FindVoteOptionSub findVoteOptionSub = FindVoteOptionSub.builder()
+                    .restaurantName(voteOption.getRestaurant().getName())
+                    .restaurantId(voteOption.getRestaurant().getRestaurantHash())
+                    .voterList(getVotersForRestaurant(voteOption.getVoteResults()))
+                    .build();
+
+            findVoteOptionSubList.add(findVoteOptionSub);
+        }
+
+        return findVoteOptionSubList;
+    }
+
+    private List<FindVoteOptionVoter> getVotersForRestaurant(List<VoteResult> voteResultsList){
+        List<FindVoteOptionVoter> voteOptionSubList = new ArrayList<>();
+
+        for (VoteResult voteResult : voteResultsList) {
+            FindVoteOptionVoter findVoteOptionVoter = FindVoteOptionVoter.builder()
+                    .userId(voteResult.getVoter().getId())
+                    .userImage(voteResult.getVoter().getProfileImage())
+                    .nickname(voteResult.getVoter().getNickname())
+                    .build();
+
+            voteOptionSubList.add(findVoteOptionVoter);
+        }
+
+        return voteOptionSubList;
     }
 
 }
