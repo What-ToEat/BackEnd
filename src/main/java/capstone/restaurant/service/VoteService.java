@@ -2,10 +2,7 @@ package capstone.restaurant.service;
 
 import capstone.restaurant.dto.vote.*;
 import capstone.restaurant.entity.*;
-import capstone.restaurant.repository.RestaurantRepository;
-import capstone.restaurant.repository.VoteOptionRepository;
-import capstone.restaurant.repository.VoteRepository;
-import capstone.restaurant.repository.VoterRepository;
+import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +19,7 @@ public class VoteService {
     private final VoteOptionRepository voteOptionRepository;
     private final RestaurantRepository restaurantRepository;
     private final VoterRepository voterRepository;
+    private final VoteResultRepository voteResultRepository;
 
     @Transactional
     public CreateVoteResponse createVote(CreateVoteRequest createVoteRequest) {
@@ -69,6 +67,45 @@ public class VoteService {
         createVoteUserResponse.setCookieDuration(cookieExpireAt);
 
         return createVoteUserResponse;
+    }
+
+    public void createVoteResult(String voteHash, CreateVoteResultRequest createVoteResultRequest) {
+        Long userId = createVoteResultRequest.getUserId();
+        List<String> options = createVoteResultRequest.getOptions();
+
+        Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
+        if(vote == null){
+            throw new EntityNotFoundException("없는 투표 입니다.");
+        }
+
+        Optional<Voter> voter = voterRepository.findById(userId);
+        if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
+            throw new EntityNotFoundException("없는 사용자 입니다.");
+        }
+
+        vote.getVoters().forEach(voter1 -> {
+            if (!voter1.getVoteResult().isEmpty() && Objects.equals(voter1.getId(), userId)) {
+                throw new IllegalArgumentException("이미 투표 했습니다.");
+            }
+        });
+
+        if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
+            throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
+        }
+        List<VoteResult> voteResults = new ArrayList<>();
+        options.forEach(option -> {
+            vote.getVoteOptions().forEach(voteOption -> {
+                if (Objects.equals(voteOption.getRestaurant().getRestaurantHash(), option)) {
+                    VoteResult voteResult = VoteResult.builder()
+                            .voter(voter.get())
+                            .voteOption(voteOption)
+                            .build();
+                    voteResults.add(voteResult);
+                }
+            });
+        });
+
+        voteResultRepository.saveAll(voteResults);
     }
 
     @Transactional
