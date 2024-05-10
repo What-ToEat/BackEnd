@@ -14,7 +14,7 @@ import java.util.List;
 public class CreateVoteResultRequest {
     @NotNull
     @Schema(example = "1")
-    private int userId;
+    private Long userId;
 
     @NotNull
     @Schema(example = "ghlee12")
