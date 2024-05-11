@@ -47,6 +47,7 @@ public class VoteController {
     }
 
     @Operation(summary = "투표 하기", description = "투표의 선택지를 고른다.")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{voteHash}/selection")
     public ResponseDto<Object> createVoteResult(
             @PathVariable("voteHash") String voteHash,
@@ -54,6 +55,16 @@ public class VoteController {
     ) {
         voteService.createVoteResult(voteHash, createVoteResultRequest);
         return new ResponseDto<>(201, "Created", null);
+    }
+
+    @Operation(summary = "투표 취소", description = "사용자의 투표 내용을 전부 지운다.")
+    @DeleteMapping("/{voteHash}/selection")
+    public ResponseDto<Object> deleteVoteResult(
+            @PathVariable("voteHash") String voteHash,
+            @RequestBody DeleteVoteResultRequest deleteVoteResultRequest
+    ) {
+        voteService.deleteVoteResult(voteHash, deleteVoteResultRequest);
+        return new ResponseDto<>(200, "Ok", null);
     }
 
     @Operation(summary = "투표 조회" , description = "투표를 조회한다.")
