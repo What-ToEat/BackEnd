@@ -1,10 +1,13 @@
 package capstone.restaurant.service;
 
 
+import capstone.restaurant.dto.vote.CreateVoteUserRequest;
+import capstone.restaurant.dto.vote.CreateVoteUserResponse;
 import capstone.restaurant.dto.vote.FindVoteOptionVoter;
 import capstone.restaurant.dto.vote.FindVoteResponse;
 import capstone.restaurant.entity.*;
 import capstone.restaurant.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -92,6 +95,81 @@ public class VoteServiceRepositoryTest {
         Assertions.assertThat(voterList2.size()).isEqualTo(1);
 
         Assertions.assertThat(findVoteResponse.getVoteOptionInfoList().size()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void voteParticipateTest_SUCCESS(){
+
+        Vote vote =  Vote.builder()
+                .title("Test")
+                .kakaoId(null)
+                .allowDuplicateVote(true)
+                .expireAt(LocalDateTime.now().plusHours(2))
+                .voteHash("abcdef")
+                .build();
+
+        this.voteRepository.save(vote);
+
+        CreateVoteUserRequest createVoteUserRequest = new CreateVoteUserRequest();
+        createVoteUserRequest.setUserName("abcd");
+        createVoteUserRequest.setUserImage(1);
+
+        CreateVoteUserResponse voteUser = this.voteService.createVoteUser(createVoteUserRequest, vote.getVoteHash());
+
+        Assertions.assertThat(voteUser.getNickname()).isEqualTo("abcd");
+        Assertions.assertThat(voteUser.getProfileImage()).isEqualTo(1);
+        Assertions.assertThat(voteUser.getUserId()).isInstanceOf(Long.class);
+    }
+
+    @Test
+    public void voteParticipateTest_SUCCESS_alreadyExists(){
+        Vote vote =  Vote.builder()
+                .title("Test")
+                .kakaoId(null)
+                .allowDuplicateVote(true)
+                .expireAt(LocalDateTime.now().plusHours(2))
+                .voteHash("abcdef")
+                .build();
+
+        this.voteRepository.save(vote);
+
+        Voter voter = Voter.builder().nickname("abcd").profileImage(1).vote(vote).build();
+
+        this.voterRepository.save(voter);
+
+        CreateVoteUserRequest createVoteUserRequest = new CreateVoteUserRequest();
+        createVoteUserRequest.setUserName("abcd");
+        createVoteUserRequest.setUserImage(1);
+
+        CreateVoteUserResponse voteUser = this.voteService.createVoteUser(createVoteUserRequest, vote.getVoteHash());
+
+        Assertions.assertThat(voteUser.getNickname()).isEqualTo("abcd");
+        Assertions.assertThat(voteUser.getProfileImage()).isEqualTo(1);
+        Assertions.assertThat(voteUser.getUserId()).isInstanceOf(Long.class);
+
+    }
+
+    @Test
+    public void voteParticipateTest_FAIL(){
+        Vote vote =  Vote.builder()
+                .title("Test")
+                .kakaoId(null)
+                .allowDuplicateVote(true)
+                .expireAt(LocalDateTime.now().plusHours(2))
+                .voteHash("abcdef")
+                .build();
+
+        this.voteRepository.save(vote);
+
+
+        CreateVoteUserRequest createVoteUserRequest = new CreateVoteUserRequest();
+        createVoteUserRequest.setUserName("abcd");
+        createVoteUserRequest.setUserImage(1);
+
+        Assertions.assertThatThrownBy(() -> {
+            this.voteService.createVoteUser(createVoteUserRequest, "abcde");
+        }).isInstanceOf(EntityNotFoundException.class);
 
     }
 }
