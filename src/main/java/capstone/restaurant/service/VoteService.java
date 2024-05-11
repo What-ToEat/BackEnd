@@ -74,31 +74,17 @@ public class VoteService {
         Long userId = createVoteResultRequest.getUserId();
         List<String> options = createVoteResultRequest.getOptions();
 
-        Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
-        if(vote == null){
-            throw new EntityNotFoundException("없는 투표 입니다.");
-        }
+        Vote vote = checkVoteExists(voteHash);
+        Voter voter = checkVoterExists(voteHash, userId);
+        checkUserVoted(vote, userId);
+        checkDuplicated(vote, options);
 
-        Optional<Voter> voter = voterRepository.findById(userId);
-        if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
-            throw new EntityNotFoundException("없는 사용자 입니다.");
-        }
-
-        vote.getVoters().forEach(voter1 -> {
-            if (!voter1.getVoteResult().isEmpty() && Objects.equals(voter1.getId(), userId)) {
-                throw new IllegalArgumentException("이미 투표 했습니다.");
-            }
-        });
-
-        if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
-            throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
-        }
         List<VoteResult> voteResults = new ArrayList<>();
         options.forEach(option -> {
             vote.getVoteOptions().forEach(voteOption -> {
                 if (Objects.equals(voteOption.getRestaurant().getRestaurantHash(), option)) {
                     VoteResult voteResult = VoteResult.builder()
-                            .voter(voter.get())
+                            .voter(voter)
                             .voteOption(voteOption)
                             .build();
                     voteResults.add(voteResult);
@@ -107,5 +93,35 @@ public class VoteService {
         });
 
         voteResultRepository.saveAll(voteResults);
+    }
+
+    private static void checkDuplicated(Vote vote, List<String> options) {
+        if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
+            throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
+        }
+    }
+
+    private static void checkUserVoted(Vote vote, Long userId) {
+        vote.getVoters().forEach(voter -> {
+            if (!voter.getVoteResult().isEmpty() && Objects.equals(voter.getId(), userId)) {
+                throw new IllegalArgumentException("이미 투표 했습니다.");
+            }
+        });
+    }
+
+    private Voter checkVoterExists(String voteHash, Long userId) {
+        Optional<Voter> voter = voterRepository.findById(userId);
+        if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
+            throw new EntityNotFoundException("없는 사용자 입니다.");
+        }
+        return voter.get();
+    }
+
+    private Vote checkVoteExists(String voteHash) {
+        Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
+        if(vote == null){
+            throw new EntityNotFoundException("없는 투표 입니다.");
+        }
+        return vote;
     }
 }
