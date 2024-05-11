@@ -1,10 +1,15 @@
 package capstone.restaurant.service;
 
 import capstone.restaurant.dto.vote.CreateVoteRequest;
+import capstone.restaurant.dto.vote.CreateVoteResultRequest;
 import capstone.restaurant.entity.Restaurant;
+import capstone.restaurant.entity.Vote;
+import capstone.restaurant.entity.Voter;
 import capstone.restaurant.repository.RestaurantRepository;
 import capstone.restaurant.repository.VoteOptionRepository;
 import capstone.restaurant.repository.VoteRepository;
+import capstone.restaurant.repository.VoterRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,6 +32,9 @@ class VoteServiceTest {
     private VoteRepository voteRepository;
     @Mock
     private VoteOptionRepository voteOptionRepository;
+
+    @Mock
+    private VoterRepository voterRepository;
     @Mock
     private RestaurantRepository restaurantRepository;
     @InjectMocks
@@ -76,5 +86,13 @@ class VoteServiceTest {
         verify(voteRepository).save(any());
         verify(restaurantRepository, times(2)).findByRestaurantHash(any());
         verify(voteOptionRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("[createVoteResult] 투표가 존재 하지 않으면 실패")
+    void createVoteResultFailVoteNotExistTest() {
+        when(voteRepository.findVoteByVoteHash(any())).thenReturn(null);
+
+        assertThrows(EntityNotFoundException.class, () -> voteService.createVoteResult("qwe", new CreateVoteResultRequest()));
     }
 }
