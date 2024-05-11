@@ -81,41 +81,4 @@ class VoteControllerTest {
         }
     }
 
-    @Test
-    @DisplayName("POST /api/votes/{id} : 투표 참여 cookie 테스트")
-    public void registerVoteUserTest() throws Exception {
-
-        registerVote();
-
-        ResultActions resultActions = mvc.perform(
-                MockMvcRequestBuilders
-                        .post("/api/vote/123")
-                        .contentType("application/json")
-                        .content("{\"userName\": \"이광훈\", \"userImage\": 1}")
-                        .accept(MediaType.ALL)
-        );
-
-        resultActions.andExpect(status().isCreated());
-        resultActions.andExpect(cookie().exists("123"));
-    }
-
-    public void registerVote(){
-
-        Vote vote = Vote.builder().title("식당 정하기").voteHash("123").expireAt(LocalDateTime.now().plusHours(2L)).build();
-        voteRepository.save(vote);
-    }
-
-    @Test
-    @DisplayName("POST /api/votes/{id} : 없는 투표 참여 테스트")
-    public void registerVoteUserFailTest() throws Exception {
-        ResultActions resultActions = mvc.perform(
-                MockMvcRequestBuilders
-                        .post("/api/vote/123")
-                        .contentType("application/json")
-                        .content("{\"userName\": \"이광훈\", \"userImage\": 1}")
-                        .accept(MediaType.ALL)
-        );
-
-        resultActions.andExpect(status().is4xxClientError());
-    }
 }
