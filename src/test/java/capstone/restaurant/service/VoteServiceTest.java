@@ -91,7 +91,7 @@ class VoteServiceTest {
     @Test
     @DisplayName("[createVoteResult] 투표가 존재 하지 않으면 실패")
     void createVoteResultFailVoteNotExistTest() {
-        when(voteRepository.findVoteByVoteHash(any())).thenReturn(null);
+        when(voteRepository.findByVoteHash(any())).thenReturn(null);
 
         assertThrows(EntityNotFoundException.class, () -> voteService.createVoteResult("qwe", new CreateVoteResultRequest()));
     }

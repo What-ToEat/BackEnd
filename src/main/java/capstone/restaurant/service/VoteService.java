@@ -22,15 +22,30 @@ public class VoteService {
     private final VoteResultRepository voteResultRepository;
 
     @Transactional
+    public FindVoteResponse findVote(String voteId){
+        Vote vote = this.voteRepository.findByVoteHash(voteId);
+
+        if(vote == null) throw new EntityNotFoundException("없는 투표입니다");
+
+        return FindVoteResponse.builder()
+                .title(vote.getTitle())
+                .allowDuplicateVote(vote.getAllowDuplicateVote())
+                .expireAt(vote.getExpireAt())
+                .voteHash(vote.getVoteHash())
+                .voteOptionInfoList(convertVoteEntityToOptionSub(vote))
+                .build();
+    }
+
+    @Transactional
     public CreateVoteResponse createVote(CreateVoteRequest createVoteRequest) {
         Vote vote = createVoteRequest.toVoteEntity();
         Vote createdVote = voteRepository.save(vote);
 
-        registerVoteOption(createVoteRequest.getRestaurants(), createdVote);
+        createVoteOption(createVoteRequest.getRestaurants(), createdVote);
         return new CreateVoteResponse(createdVote.getVoteHash());
     }
 
-    private void registerVoteOption(List<String> restaurants, Vote vote) {
+    private void createVoteOption(List<String> restaurants, Vote vote) {
         restaurants.forEach(restaurantHash -> {
             Restaurant restaurant = restaurantRepository.findByRestaurantHash(restaurantHash);
             if (restaurant == null) {
@@ -117,26 +132,11 @@ public class VoteService {
     }
 
     private Vote checkVoteExists(String voteHash) {
-        Vote vote = this.voteRepository.findVoteByVoteHash(voteHash);
+        Vote vote = this.voteRepository.findByVoteHash(voteHash);
         if(vote == null){
             throw new EntityNotFoundException("없는 투표 입니다.");
         }
         return vote;
-    }
-
-    @Transactional
-    public FindVoteResponse findVote(String voteId){
-        Vote vote = this.voteRepository.findByVoteHash(voteId);
-
-        if(vote == null) throw new EntityNotFoundException("없는 투표입니다");
-
-        return FindVoteResponse.builder()
-                .title(vote.getTitle())
-                .allowDuplicateVote(vote.getAllowDuplicateVote())
-                .expireAt(vote.getExpireAt())
-                .voteHash(vote.getVoteHash())
-                .voteOptionInfoList(convertVoteEntityToOptionSub(vote))
-                .build();
     }
 
     private List<FindVoteOptionSub> convertVoteEntityToOptionSub(Vote vote){
