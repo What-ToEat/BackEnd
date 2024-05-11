@@ -32,13 +32,13 @@ public class VoteController {
 
     @Operation(summary = "투표 참여" , description = "투표에 참여한다.")
     @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = { @ApiResponse(responseCode = "201" , description = "레스토랑 투표 참여") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
     public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest , @PathVariable("id") String voteHash , HttpServletResponse response){
 
         CreateVoteUserResponse createVoteUserResponse = voteService.createVoteUser(createVoteUserRequest , voteHash);
 
-        return new ResponseDto<>(201 , "Created" ,createVoteUserResponse);
+        return new ResponseDto<>(200 , "투표 참여 완료" ,createVoteUserResponse);
     }
 
     @Operation(summary = "투표 조회" , description = "투표를 조회한다.")

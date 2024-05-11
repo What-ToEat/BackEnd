@@ -46,6 +46,7 @@ public class VoteService {
         });
     }
 
+    @Transactional
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
         Vote vote = this.voteRepository.findByVoteHash(voteHash);
