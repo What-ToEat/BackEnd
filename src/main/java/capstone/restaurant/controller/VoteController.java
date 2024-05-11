@@ -52,6 +52,7 @@ public class VoteController {
             @PathVariable("voteHash") String voteHash,
             @RequestBody CreateVoteResultRequest createVoteResultRequest
     ) {
+        voteService.createVoteResult(voteHash, createVoteResultRequest);
         return new ResponseDto<>(201, "Created", null);
     }
 
