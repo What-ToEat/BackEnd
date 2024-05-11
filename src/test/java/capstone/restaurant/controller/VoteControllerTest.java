@@ -2,8 +2,10 @@ package capstone.restaurant.controller;
 
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.Vote;
+import capstone.restaurant.entity.Voter;
 import capstone.restaurant.repository.RestaurantRepository;
 import capstone.restaurant.repository.VoteRepository;
+import capstone.restaurant.repository.VoterRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,6 +37,8 @@ class VoteControllerTest {
     private RestaurantRepository restaurantRepository;
     @Autowired
     private VoteRepository voteRepository;
+    @Autowired
+    private VoterRepository voterRepository;
 
     @Test
     @DisplayName("POST /api/votes : 투표 생성 성공")
@@ -99,10 +102,10 @@ class VoteControllerTest {
         resultActions.andExpect(cookie().exists("123"));
     }
 
-    public void registerVote(){
+    public Vote registerVote(){
 
         Vote vote = Vote.builder().title("식당 정하기").voteHash("123").expireAt(LocalDateTime.now().plusHours(2L)).build();
-        voteRepository.save(vote);
+        return voteRepository.save(vote);
     }
 
     @Test
@@ -117,5 +120,47 @@ class VoteControllerTest {
         );
 
         resultActions.andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/votes/{id}/selection : 없는 투표에 대해 요청시 404")
+    void deleteVoteResultFailVoteNotExist() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/api/vote/123/selection")
+                        .contentType("application/json")
+                        .content("{\"nickname\": \"이광훈\", \"userId\": 1}")
+                        .accept(MediaType.ALL)
+        );
+        resultActions.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/votes/{id}/selection : 없는 사용자가 요청시 404")
+    void deleteVoteResultFailVoterNotExist() throws Exception {
+        registerVote();
+        ResultActions resultActions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/api/vote/123/selection")
+                        .contentType("application/json")
+                        .content("{\"nickname\": \"이광훈\", \"userId\": 1}")
+                        .accept(MediaType.ALL)
+        );
+        resultActions.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/votes/{id}/selection : 정상적으로 투표 기록 삭제")
+    void deleteVoteResultTest() throws Exception {
+        Vote vote = registerVote();
+        voterRepository.save(Voter.builder().nickname("qwe").id(1L).vote(vote).profileImage(1).build());
+        ResultActions resultActions = mvc.perform(
+                MockMvcRequestBuilders
+                        .delete("/api/vote/123/selection")
+                        .contentType("application/json")
+                        .content("{\"nickname\": \"이광훈\", \"userId\": 1}")
+                        .accept(MediaType.ALL)
+        );
+        resultActions.andExpect(status().isOk());
     }
 }
