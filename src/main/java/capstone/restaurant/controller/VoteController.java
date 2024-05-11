@@ -38,12 +38,6 @@ public class VoteController {
 
         CreateVoteUserResponse createVoteUserResponse = voteService.createVoteUser(createVoteUserRequest , voteHash);
 
-        Cookie cookie = new Cookie(voteHash , createVoteUserResponse.getUserId().toString());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/api/vote/" + voteHash);
-        cookie.setMaxAge(createVoteUserResponse.getCookieDuration().intValue());
-
-        response.addCookie(cookie);
         return new ResponseDto<>(201 , "Created" ,createVoteUserResponse);
     }
 
