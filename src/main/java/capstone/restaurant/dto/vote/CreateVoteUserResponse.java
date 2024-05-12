@@ -1,15 +1,16 @@
 package capstone.restaurant.dto.vote;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 public class CreateVoteUserResponse {
 
     private Long userId;
 
-    private Long cookieDuration;
+    private String nickname;
+
+    private Integer profileImage;
 }

@@ -31,30 +31,12 @@ public class VoteController {
 
     @Operation(summary = "투표 참여", description = "투표에 참여한다.")
     @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "레스토랑 투표 참여"), @ApiResponse(responseCode = "404", description = "식당을 찾을 수 없음")})
-    public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest, @PathVariable("id") String voteHash, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = { @ApiResponse(responseCode = "201" , description = "레스토랑 투표 참여") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
+    public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest , @PathVariable("id") String voteHash , HttpServletResponse response){
 
         CreateVoteUserResponse createVoteUserResponse = voteService.createVoteUser(createVoteUserRequest, voteHash);
-
-        Cookie cookie = new Cookie(voteHash, createVoteUserResponse.getUserId().toString());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/api/vote/" + voteHash);
-        cookie.setMaxAge(createVoteUserResponse.getCookieDuration().intValue());
-
-        response.addCookie(cookie);
-        return new ResponseDto<>(201, "Created", createVoteUserResponse);
-    }
-
-    @Operation(summary = "투표 하기", description = "투표의 선택지를 고른다.")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{voteHash}/selection")
-    public ResponseDto<Object> createVoteResult(
-            @PathVariable("voteHash") String voteHash,
-            @RequestBody CreateVoteResultRequest createVoteResultRequest
-    ) {
-        voteService.createVoteResult(voteHash, createVoteResultRequest);
-        return new ResponseDto<>(201, "Created", null);
+        return new ResponseDto<>(200 , "투표 참여 완료" ,createVoteUserResponse);
     }
 
     @Operation(summary = "투표 취소", description = "사용자의 투표 내용을 전부 지운다. 사용자가 투표 한적이 없더라도 이 요청을 보내면 오류가 발생하지 않는다. 항상 사용자 투표를 하든 안했던 안한 상태로 만든다.")
