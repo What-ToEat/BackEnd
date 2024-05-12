@@ -39,6 +39,16 @@ public class VoteController {
         return new ResponseDto<>(200 , "투표 참여 완료" ,createVoteUserResponse);
     }
 
+    @Operation(summary = "투표 취소", description = "사용자의 투표 내용을 전부 지운다. 사용자가 투표 한적이 없더라도 이 요청을 보내면 오류가 발생하지 않는다. 항상 사용자 투표를 하든 안했던 안한 상태로 만든다.")
+    @DeleteMapping("/{voteHash}/selection")
+    public ResponseDto<Object> deleteVoteResult(
+            @PathVariable("voteHash") String voteHash,
+            @RequestBody DeleteVoteResultRequest deleteVoteResultRequest
+    ) {
+        voteService.deleteVoteResult(voteHash, deleteVoteResultRequest);
+        return new ResponseDto<>(200, "Ok", null);
+    }
+
     @Operation(summary = "투표 조회" , description = "투표를 조회한다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

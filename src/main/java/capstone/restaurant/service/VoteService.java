@@ -118,6 +118,16 @@ public class VoteService {
         voteResultRepository.saveAll(voteResults);
     }
 
+    @Transactional
+    public void deleteVoteResult(String voteHash, DeleteVoteResultRequest deleteVoteResultRequest) {
+        Long userId = deleteVoteResultRequest.getUserId();
+
+        checkVoteExists(voteHash);
+        Voter voter = checkVoterExists(voteHash, userId);
+
+        voteResultRepository.deleteAllByVoter(voter);
+    }
+
     private static void checkDuplicated(Vote vote, List<String> options) {
         if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
             throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
