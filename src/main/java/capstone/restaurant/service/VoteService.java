@@ -59,6 +59,7 @@ public class VoteService {
         });
     }
 
+    @Transactional
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
         Vote vote = this.voteRepository.findByVoteHash(voteHash);
@@ -67,21 +68,29 @@ public class VoteService {
             throw new EntityNotFoundException("없는 투표입니다");
         }
 
-        Long cookieExpireAt = Duration.between(LocalDateTime.now() , vote.getExpireAt()).getSeconds();
+        Voter participatingUser = checkIsParticipatingUser(vote.getVoters() , createVoteUserRequest.getUserName());
 
-        Voter voter = Voter.builder()
-                .nickname(createVoteUserRequest.getUserName())
-                .profileImage(createVoteUserRequest.getUserImage())
-                .vote(vote)
-                .build();
+        if(participatingUser != null){
+            return new CreateVoteUserResponse(participatingUser.getId(), participatingUser.getNickname(), participatingUser.getProfileImage());
+        }else{
+            Voter voter = Voter.builder()
+                    .nickname(createVoteUserRequest.getUserName())
+                    .profileImage(createVoteUserRequest.getUserImage())
+                    .vote(vote)
+                    .build();
 
-        this.voterRepository.save(voter);
+            this.voterRepository.save(voter);
 
-        CreateVoteUserResponse createVoteUserResponse = new CreateVoteUserResponse();
-        createVoteUserResponse.setUserId(voter.getId());
-        createVoteUserResponse.setCookieDuration(cookieExpireAt);
+            return new CreateVoteUserResponse(vote.getId(), voter.getNickname() , voter.getProfileImage());
+        }
+    }
 
-        return createVoteUserResponse;
+
+    private Voter checkIsParticipatingUser(List<Voter> voterList , String username){
+        for (Voter voter : voterList) {
+            if (voter.getNickname().equals(username)) return voter;
+        }
+        return null;
     }
 
     public void createVoteResult(String voteHash, CreateVoteResultRequest createVoteResultRequest) {

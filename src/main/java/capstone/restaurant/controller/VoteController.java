@@ -31,29 +31,12 @@ public class VoteController {
 
     @Operation(summary = "투표 참여", description = "투표에 참여한다.")
     @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "레스토랑 투표 참여"), @ApiResponse(responseCode = "404", description = "식당을 찾을 수 없음")})
-    public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest, @PathVariable("id") String voteHash, HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = { @ApiResponse(responseCode = "201" , description = "레스토랑 투표 참여") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
+    public ResponseDto<CreateVoteUserResponse> createVoteUser(@RequestBody @Validated CreateVoteUserRequest createVoteUserRequest , @PathVariable("id") String voteHash , HttpServletResponse response){
 
         CreateVoteUserResponse createVoteUserResponse = voteService.createVoteUser(createVoteUserRequest, voteHash);
-
-        Cookie cookie = new Cookie(voteHash, createVoteUserResponse.getUserId().toString());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/api/vote/" + voteHash);
-        cookie.setMaxAge(createVoteUserResponse.getCookieDuration().intValue());
-
-        response.addCookie(cookie);
-        return new ResponseDto<>(201, "Created", createVoteUserResponse);
-    }
-
-    @Operation(summary = "투표 하기", description = "투표의 선택지를 고른다.")
-    @PostMapping("/{voteHash}/selection")
-    public ResponseDto<Object> createVoteResult(
-            @PathVariable("voteHash") String voteHash,
-            @RequestBody CreateVoteResultRequest createVoteResultRequest
-    ) {
-        voteService.createVoteResult(voteHash, createVoteResultRequest);
-        return new ResponseDto<>(201, "Created", null);
+        return new ResponseDto<>(200 , "투표 참여 완료" ,createVoteUserResponse);
     }
 
     @Operation(summary = "투표 조회" , description = "투표를 조회한다.")
