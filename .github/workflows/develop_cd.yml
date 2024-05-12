@@ -46,7 +46,7 @@ jobs:
 
       - name: Code Deploy 로 배포
         run: >
-          aws deploy create-deployment --application-name code-deploy_test
+          aws deploy create-deployment --application-name what_to_eat
           --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name code-deploy-test-group
+          --deployment-group-name what_toeat_dev
           --s3-location bucket=spring-cd-test,bundleType=zip,key=deploy/WhatToEat.zip
