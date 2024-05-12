@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -59,6 +60,7 @@ public class VoteService {
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
         Vote vote = checkVoteExists(voteHash);
+        checkIsExpired(vote);
 
         Voter participatingUser = checkIsParticipatingUser(vote.getVoters() , createVoteUserRequest.getUserName());
 
@@ -90,6 +92,7 @@ public class VoteService {
         List<String> options = createVoteResultRequest.getOptions();
 
         Vote vote = checkVoteExists(voteHash);
+        checkIsExpired(vote);
         Voter voter = checkVoterExists(voteHash, userId);
         checkUserVoted(vote, userId);
         checkDuplicated(vote, options);
@@ -114,7 +117,8 @@ public class VoteService {
     public void deleteVoteResult(String voteHash, DeleteVoteResultRequest deleteVoteResultRequest) {
         Long userId = deleteVoteResultRequest.getUserId();
 
-        checkVoteExists(voteHash);
+        Vote vote = checkVoteExists(voteHash);
+        checkIsExpired(vote);
         Voter voter = checkVoterExists(voteHash, userId);
 
         voteResultRepository.deleteAllByVoter(voter);
@@ -181,6 +185,12 @@ public class VoteService {
         }
 
         return voteOptionSubList;
+    }
+
+    private void checkIsExpired(Vote vote) {
+        if (!vote.getExpireAt().isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("투표 기간이 지났습니다.");
+        }
     }
 
 }
