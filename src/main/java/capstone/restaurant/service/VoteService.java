@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -23,9 +21,7 @@ public class VoteService {
 
     @Transactional
     public FindVoteResponse findVote(String voteId){
-        Vote vote = this.voteRepository.findByVoteHash(voteId);
-
-        if(vote == null) throw new EntityNotFoundException("없는 투표입니다");
+        Vote vote = checkVoteExists(voteId);
 
         return FindVoteResponse.builder()
                 .title(vote.getTitle())
@@ -62,11 +58,7 @@ public class VoteService {
     @Transactional
     public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
 
-        Vote vote = this.voteRepository.findByVoteHash(voteHash);
-
-        if(vote == null){
-            throw new EntityNotFoundException("없는 투표입니다");
-        }
+        Vote vote = checkVoteExists(voteHash);
 
         Voter participatingUser = checkIsParticipatingUser(vote.getVoters() , createVoteUserRequest.getUserName());
 
