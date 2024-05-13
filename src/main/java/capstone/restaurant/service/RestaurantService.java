@@ -39,7 +39,7 @@ public class RestaurantService {
     public RestaurantListResponse restaurantListFindByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
 
-        Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
+        Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 10));
         response.setRestaurants(convertRestaurantsToRestaurantList(restaurantList));
         return response;
     }

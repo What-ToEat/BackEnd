@@ -22,7 +22,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
     @Override
     public List<RestaurantListSub> findRestaurantListByTag(String place , String[] tags , int page) {
 
-        int unit = 5;
+        int unit = 10;
         List<Restaurant> query = queryFactory.select(restaurantTag.restaurant)
                 .from(restaurantTag)
                 .where(restaurantTag.tag.tagName.in(tags))
