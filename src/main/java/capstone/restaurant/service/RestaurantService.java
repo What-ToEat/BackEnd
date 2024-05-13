@@ -39,7 +39,7 @@ public class RestaurantService {
     public RestaurantListResponse restaurantListFindByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
 
-        Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 2));
+        Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 10));
         response.setRestaurants(convertRestaurantsToRestaurantList(restaurantList));
         return response;
     }
@@ -47,10 +47,11 @@ public class RestaurantService {
     private List<RestaurantListSub> convertRestaurantsToRestaurantList(Page<Restaurant> restaurantList){
 
         List<RestaurantListSub> restaurantListSubs = new ArrayList<RestaurantListSub>();
-        List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
 
         for(Restaurant restaurant : restaurantList){
             RestaurantListSub restaurantListSub = new RestaurantListSub();
+            List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
+
             restaurantListSub.setName(restaurant.getName());
             restaurantListSub.setThumbnail(restaurant.getThumbnail());
             restaurantListSub.setRestaurantId(restaurant.getRestaurantHash());
@@ -61,6 +62,7 @@ public class RestaurantService {
 
             restaurantListSub.setTags(tagResponseList);
             restaurantListSubs.add(restaurantListSub);
+
         }
         return restaurantListSubs;
     }
