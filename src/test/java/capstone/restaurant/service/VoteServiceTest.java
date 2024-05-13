@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -102,6 +103,7 @@ class VoteServiceTest {
         Vote vote = Vote.builder()
                 .title("test")
                 .voteHash("qwe")
+                .expireAt(LocalDateTime.now().plusHours(3))
                 .build();
         when(voterRepository.findById(any())).thenReturn(Optional.empty());
         when(voteRepository.findByVoteHash(any())).thenReturn(vote);
@@ -123,6 +125,7 @@ class VoteServiceTest {
         Vote vote = Vote.builder()
                 .title("test")
                 .voteHash("qwe")
+                .expireAt(LocalDateTime.now().plusHours(3))
                 .build();
         when(voterRepository.findById(any())).thenReturn(Optional.empty());
         when(voteRepository.findByVoteHash(any())).thenReturn(vote);
@@ -143,6 +146,7 @@ class VoteServiceTest {
         Vote vote = Vote.builder()
                 .title("test")
                 .voteHash("qwe")
+                .expireAt(LocalDateTime.now().plusHours(3))
                 .voters(Arrays.asList(voter))
                 .build();
         when(voterRepository.findById(any())).thenReturn(Optional.of(voter));
