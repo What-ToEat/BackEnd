@@ -26,6 +26,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
         List<Restaurant> query = queryFactory.select(restaurantTag.restaurant)
                 .from(restaurantTag)
                 .where(restaurantTag.tag.tagName.in(tags))
+                .where(restaurantTag.restaurant.place.eq(place))
                 .groupBy(restaurantTag.restaurant)
                 .having(restaurantTag.restaurant.count().eq((long) tags.length))
                 .offset((long) (page - 1) * unit)
