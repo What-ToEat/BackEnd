@@ -29,6 +29,8 @@ public class Restaurant {
 
     private String thumbnail;
 
+    private String place;
+
     private String name;
 
     @Builder.Default
