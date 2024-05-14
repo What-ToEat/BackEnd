@@ -52,7 +52,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom{
 
             RestaurantListSub restaurantListSub = new RestaurantListSub();
             restaurantListSub.setName(item.getName());
-            restaurantListSub.setThumbnail(item.getAddress());
+            restaurantListSub.setThumbnail(item.getThumbnail());
             restaurantListSub.setTags(tagResponseList);
             restaurantListSub.setRestaurantId(item.getRestaurantHash());
             result.add(restaurantListSub);
