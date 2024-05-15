@@ -19,6 +19,7 @@ import java.awt.print.Pageable;
 
 @Tag(name = "restaurants", description = "식당 조회 API")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("api/restaurants")
 @RequiredArgsConstructor
 public class RestaurantController {
