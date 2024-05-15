@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "vote", description = "투표 관련 api")
 @RestController
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/api/vote")
 public class VoteController {
