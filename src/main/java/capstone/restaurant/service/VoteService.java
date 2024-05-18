@@ -5,10 +5,12 @@ import capstone.restaurant.entity.*;
 import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -193,4 +195,17 @@ public class VoteService {
         }
     }
 
+    @Scheduled(fixedRate = 60000)
+    public void sendResult() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Vote> votes = voteRepository.findAll();
+        for ( Vote vote : votes ) {
+            if (compareByMinute(now, vote.getExpireAt())) {
+                System.out.println(vote.getTitle());
+            }
+        }
+    }
+    private static boolean compareByMinute(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+        return dateTime1.truncatedTo(ChronoUnit.MINUTES).equals(dateTime2.truncatedTo(ChronoUnit.MINUTES));
+    }
 }
