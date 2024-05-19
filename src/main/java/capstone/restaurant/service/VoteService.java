@@ -5,6 +5,10 @@ import capstone.restaurant.entity.*;
 import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +18,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class VoteService {
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+    private final MailSender mailSender;
     private final VoteRepository voteRepository;
     private final VoteOptionRepository voteOptionRepository;
     private final RestaurantRepository restaurantRepository;
@@ -207,5 +215,21 @@ public class VoteService {
     }
     private static boolean compareByMinute(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         return dateTime1.truncatedTo(ChronoUnit.MINUTES).equals(dateTime2.truncatedTo(ChronoUnit.MINUTES));
+    }
+
+    private void sendEmail(Vote vote) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        String address = "http://www.test.com/vote/";
+        msg.setTo(vote.getEmail());
+        msg.setSubject(vote.getTitle() + "가 만료되었습니다.");
+        msg.setText(address + vote.getVoteHash());
+        msg.setFrom(senderEmail);
+        try{
+            mailSender.send(msg);
+            log.info(vote.getVoteHash() + "의 결과가 " + vote.getEmail() + "로 보내졌습니다.");
+        } catch(Error e) {
+            log.error(vote.getVoteHash() + "투표의 결과가 정상적으로 보내지 않았습니다.");
+            throw e;
+        }
     }
 }
