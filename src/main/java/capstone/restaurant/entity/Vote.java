@@ -1,10 +1,7 @@
 package capstone.restaurant.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public class Vote {
 
     private LocalDateTime expireAt;
 
-    private String kakaoId;
+    private String email;
 
     private Boolean allowDuplicateVote;
 

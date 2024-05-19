@@ -20,8 +20,8 @@ public class CreateVoteRequest {
     @NotNull
     @Schema(example = "동창회 식당 정하기")
     private String title;
-    @Schema(example = "akssrt163", description = "결과를 카카오톡으로 받고 싶은 경우만 추가")
-    private String kakaoId;
+    @Schema(example = "akssrt163@naver.com", description = "결과를 이메일로 받고 싶은 경우만 추가")
+    private String email;
     @NotNull
     private Boolean allowDuplicateVote;
     @NotNull
@@ -35,9 +35,9 @@ public class CreateVoteRequest {
         return Vote.builder()
                 .title(title)
                 .voteHash(voteHash)
-                .kakaoId(kakaoId)
+                .email(email)
                 .allowDuplicateVote(allowDuplicateVote)
-                .expireAt(LocalDateTime.now().plusHours(expirationTime))
+                .expireAt(LocalDateTime.now().plusMinutes(expirationTime))
                 .build();
     }
 }
