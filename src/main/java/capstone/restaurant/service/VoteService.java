@@ -208,8 +208,8 @@ public class VoteService {
         LocalDateTime now = LocalDateTime.now();
         List<Vote> votes = voteRepository.findAll();
         for ( Vote vote : votes ) {
-            if (compareByMinute(now, vote.getExpireAt())) {
-                System.out.println(vote.getTitle());
+            if (compareByMinute(now, vote.getExpireAt()) && vote.getEmail()!=null) {
+                sendEmail(vote);
             }
         }
     }
