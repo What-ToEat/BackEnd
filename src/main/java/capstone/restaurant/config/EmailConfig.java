@@ -25,11 +25,6 @@ public class EmailConfig {
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-
-//        javaMailSender.setHost("smtp.naver.com");
-//        javaMailSender.setUsername("koomin1227@naver.com");
-//        javaMailSender.setPassword("DG7SYCHCPCP9");
-
         javaMailSender.setHost(host);
         javaMailSender.setPassword(password);
         javaMailSender.setUsername(username);
@@ -46,7 +41,6 @@ public class EmailConfig {
         properties.setProperty("mail.transport.protocol", "smtp");
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
-//        properties.setProperty("mail.debug", "true");
         properties.setProperty("mail.smtp.ssl.trust","smtp.naver.com");
         properties.setProperty("mail.smtp.ssl.enable","true");
         return properties;
