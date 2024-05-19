@@ -6,32 +6,48 @@ import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class VoteService {
-    @Value("${spring.mail.username}")
-    private String senderEmail;
-    private final MailSender mailSender;
+    private final EmailService emailService;
     private final VoteRepository voteRepository;
     private final VoteOptionRepository voteOptionRepository;
     private final RestaurantRepository restaurantRepository;
     private final VoterRepository voterRepository;
     private final VoteResultRepository voteResultRepository;
 
+    private static void checkDuplicated(Vote vote, List<String> options) {
+        if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
+            throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
+        }
+    }
+
+    private static void checkUserVoted(Vote vote, Long userId) {
+        vote.getVoters().forEach(voter -> {
+            if (!voter.getVoteResult().isEmpty() && Objects.equals(voter.getId(), userId)) {
+                throw new IllegalArgumentException("이미 투표 했습니다.");
+            }
+        });
+    }
+
+    private static boolean compareByMinute(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+        return dateTime1.truncatedTo(ChronoUnit.MINUTES).equals(dateTime2.truncatedTo(ChronoUnit.MINUTES));
+    }
+
     @Transactional
-    public FindVoteResponse findVote(String voteId){
+    public FindVoteResponse findVote(String voteId) {
         Vote vote = checkVoteExists(voteId);
 
         return FindVoteResponse.builder()
@@ -67,16 +83,16 @@ public class VoteService {
     }
 
     @Transactional
-    public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest , String voteHash){
+    public CreateVoteUserResponse createVoteUser(CreateVoteUserRequest createVoteUserRequest, String voteHash) {
 
         Vote vote = checkVoteExists(voteHash);
         checkIsExpired(vote);
 
-        Voter participatingUser = checkIsParticipatingUser(vote.getVoters() , createVoteUserRequest.getUserName());
+        Voter participatingUser = checkIsParticipatingUser(vote.getVoters(), createVoteUserRequest.getUserName());
 
-        if(participatingUser != null){
+        if (participatingUser != null) {
             return new CreateVoteUserResponse(participatingUser.getId(), participatingUser.getNickname(), participatingUser.getProfileImage());
-        }else{
+        } else {
             Voter voter = Voter.builder()
                     .nickname(createVoteUserRequest.getUserName())
                     .profileImage(createVoteUserRequest.getUserImage())
@@ -85,13 +101,12 @@ public class VoteService {
 
             this.voterRepository.save(voter);
 
-            return new CreateVoteUserResponse(vote.getId(), voter.getNickname() , voter.getProfileImage());
+            return new CreateVoteUserResponse(vote.getId(), voter.getNickname(), voter.getProfileImage());
         }
     }
 
-
-    private Voter checkIsParticipatingUser(List<Voter> voterList , String username){
-        for (Voter voter : voterList) {
+    private Voter checkIsParticipatingUser(List<Voter> voterList, String username) {
+        for ( Voter voter : voterList ) {
             if (voter.getNickname().equals(username)) return voter;
         }
         return null;
@@ -134,20 +149,6 @@ public class VoteService {
         voteResultRepository.deleteAllByVoter(voter);
     }
 
-    private static void checkDuplicated(Vote vote, List<String> options) {
-        if (!vote.getAllowDuplicateVote() && options.size() >= 2) {
-            throw new IllegalArgumentException("중복 투표가 아닌데 2개 이상의 옵션을 골랐습니다.");
-        }
-    }
-
-    private static void checkUserVoted(Vote vote, Long userId) {
-        vote.getVoters().forEach(voter -> {
-            if (!voter.getVoteResult().isEmpty() && Objects.equals(voter.getId(), userId)) {
-                throw new IllegalArgumentException("이미 투표 했습니다.");
-            }
-        });
-    }
-
     private Voter checkVoterExists(String voteHash, Long userId) {
         Optional<Voter> voter = voterRepository.findById(userId);
         if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
@@ -158,17 +159,17 @@ public class VoteService {
 
     private Vote checkVoteExists(String voteHash) {
         Vote vote = this.voteRepository.findByVoteHash(voteHash);
-        if(vote == null){
+        if (vote == null) {
             throw new EntityNotFoundException("없는 투표 입니다.");
         }
         return vote;
     }
 
-    private List<FindVoteOptionSub> convertVoteEntityToOptionSub(Vote vote){
+    private List<FindVoteOptionSub> convertVoteEntityToOptionSub(Vote vote) {
 
         List<FindVoteOptionSub> findVoteOptionSubList = new ArrayList<>();
 
-        for (VoteOption voteOption : vote.getVoteOptions()) {
+        for ( VoteOption voteOption : vote.getVoteOptions() ) {
             FindVoteOptionSub findVoteOptionSub = FindVoteOptionSub.builder()
                     .restaurantName(voteOption.getRestaurant().getName())
                     .restaurantId(voteOption.getRestaurant().getRestaurantHash())
@@ -181,10 +182,10 @@ public class VoteService {
         return findVoteOptionSubList;
     }
 
-    private List<FindVoteOptionVoter> getVotersForRestaurant(List<VoteResult> voteResultsList){
+    private List<FindVoteOptionVoter> getVotersForRestaurant(List<VoteResult> voteResultsList) {
         List<FindVoteOptionVoter> voteOptionSubList = new ArrayList<>();
 
-        for (VoteResult voteResult : voteResultsList) {
+        for ( VoteResult voteResult : voteResultsList ) {
             FindVoteOptionVoter findVoteOptionVoter = FindVoteOptionVoter.builder()
                     .userId(voteResult.getVoter().getId())
                     .userImage(voteResult.getVoter().getProfileImage())
@@ -208,28 +209,9 @@ public class VoteService {
         LocalDateTime now = LocalDateTime.now();
         List<Vote> votes = voteRepository.findAll();
         for ( Vote vote : votes ) {
-            if (compareByMinute(now, vote.getExpireAt()) && vote.getEmail()!=null) {
-                sendEmail(vote);
+            if (compareByMinute(now, vote.getExpireAt()) && vote.getEmail() != null) {
+                emailService.sendEmail(vote);
             }
-        }
-    }
-    private static boolean compareByMinute(LocalDateTime dateTime1, LocalDateTime dateTime2) {
-        return dateTime1.truncatedTo(ChronoUnit.MINUTES).equals(dateTime2.truncatedTo(ChronoUnit.MINUTES));
-    }
-
-    private void sendEmail(Vote vote) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        String address = "http://www.test.com/vote/";
-        msg.setTo(vote.getEmail());
-        msg.setSubject(vote.getTitle() + "가 만료되었습니다.");
-        msg.setText(address + vote.getVoteHash());
-        msg.setFrom(senderEmail);
-        try{
-            mailSender.send(msg);
-            log.info(vote.getVoteHash() + "의 결과가 " + vote.getEmail() + "로 보내졌습니다.");
-        } catch(Error e) {
-            log.error(vote.getVoteHash() + "투표의 결과가 정상적으로 보내지 않았습니다.");
-            throw e;
         }
     }
 }
