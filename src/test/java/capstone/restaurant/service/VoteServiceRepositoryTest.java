@@ -56,7 +56,7 @@ public class VoteServiceRepositoryTest {
 
         Vote vote =  Vote.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expireAt(LocalDateTime.now().plusHours(2))
                 .voteHash("abcdef")
@@ -103,7 +103,7 @@ public class VoteServiceRepositoryTest {
 
         Vote vote =  Vote.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expireAt(LocalDateTime.now().plusHours(2))
                 .voteHash("abcdef")
@@ -126,7 +126,7 @@ public class VoteServiceRepositoryTest {
     public void voteParticipateTest_SUCCESS_alreadyExists(){
         Vote vote =  Vote.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expireAt(LocalDateTime.now().plusHours(2))
                 .voteHash("abcdef")
@@ -154,7 +154,7 @@ public class VoteServiceRepositoryTest {
     public void voteParticipateTest_FAIL(){
         Vote vote =  Vote.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expireAt(LocalDateTime.now().plusHours(2))
                 .voteHash("abcdef")

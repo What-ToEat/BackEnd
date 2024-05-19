@@ -109,8 +109,8 @@ public class RestaurantTest {
         RestaurantListResponse response1 = restaurantService.restaurantListFindByKeyword("ab" , 1);
         RestaurantListResponse response2 = restaurantService.restaurantListFindByKeyword("ab" , 2);
 
-        Assertions.assertThat(response1.getRestaurants().size()).isEqualTo(2);
-        Assertions.assertThat(response2.getRestaurants().size()).isEqualTo(1);
+        Assertions.assertThat(response1.getRestaurants().size()).isEqualTo(3);
+        Assertions.assertThat(response2.getRestaurants().size()).isEqualTo(0);
         
     }
     

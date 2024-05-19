@@ -48,7 +48,7 @@ class VoteServiceTest {
         List<String> restaurants = Arrays.asList("qwe123qw", "asd123as");
         CreateVoteRequest createVoteRequest = CreateVoteRequest.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expirationTime(1)
                 .restaurants(restaurants)
@@ -71,7 +71,7 @@ class VoteServiceTest {
         List<String> restaurants = Arrays.asList("qwe123qw", "asd123as");
         CreateVoteRequest createVoteRequest = CreateVoteRequest.builder()
                 .title("Test")
-                .kakaoId(null)
+                .email(null)
                 .allowDuplicateVote(true)
                 .expirationTime(1)
                 .restaurants(restaurants)
