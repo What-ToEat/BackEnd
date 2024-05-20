@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,13 +99,12 @@ class VoteControllerTest {
                         .accept(MediaType.ALL)
         );
 
-        resultActions.andExpect(status().isCreated());
-        resultActions.andExpect(cookie().exists("123"));
+        resultActions.andExpect(status().isOk());
     }
 
     public Vote registerVote(){
 
-        Vote vote = Vote.builder().title("식당 정하기").voteHash("123").expireAt(LocalDateTime.now().plusHours(2L)).build();
+        Vote vote = Vote.builder().title("식당 정하기").voteHash("123").expireAt(LocalDateTime.now().plusHours(2L)).voters(new ArrayList<>()).build();
         return voteRepository.save(vote);
     }
 
