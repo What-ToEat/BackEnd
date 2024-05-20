@@ -26,9 +26,9 @@ public class EmailService {
         try{
             mailSender.send(msg);
             log.info(vote.getVoteHash() + "의 결과가 " + vote.getEmail() + "로 보내졌습니다.");
-        } catch(Error e) {
+        } catch(Exception e) {
             log.error(vote.getVoteHash() + "투표의 결과가 정상적으로 보내지 않았습니다.");
-            throw e;
+            log.error(e.getMessage());
         }
     }
 }
