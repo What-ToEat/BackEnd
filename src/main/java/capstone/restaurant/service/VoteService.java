@@ -141,6 +141,7 @@ public class VoteService {
     @Transactional
     public void deleteVoteResult(String voteHash, DeleteVoteResultRequest deleteVoteResultRequest) {
         Long userId = deleteVoteResultRequest.getUserId();
+        Optional<Voter> byId = voterRepository.findById(userId);
 
         Vote vote = checkVoteExists(voteHash);
         checkIsExpired(vote);
@@ -150,7 +151,9 @@ public class VoteService {
     }
 
     private Voter checkVoterExists(String voteHash, Long userId) {
+
         Optional<Voter> voter = voterRepository.findById(userId);
+        
         if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
             throw new EntityNotFoundException("없는 사용자 입니다.");
         }
