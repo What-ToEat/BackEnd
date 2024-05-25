@@ -6,6 +6,7 @@ import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,7 +204,7 @@ public class VoteService {
 
     private void checkIsExpired(Vote vote) {
         if (!vote.getExpireAt().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("투표 기간이 지났습니다.");
+            throw new IllegalStateException("투표 기간이 지났습니다.");
         }
     }
 

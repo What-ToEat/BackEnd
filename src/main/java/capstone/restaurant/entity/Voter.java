@@ -26,5 +26,6 @@ public class Voter {
     private Vote vote;
 
     @OneToMany(mappedBy = "voter")
+    @Builder.Default
     private List<VoteResult> voteResult = new ArrayList<>();
 }
