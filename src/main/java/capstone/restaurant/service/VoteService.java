@@ -6,6 +6,7 @@ import capstone.restaurant.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +102,7 @@ public class VoteService {
 
             this.voterRepository.save(voter);
 
-            return new CreateVoteUserResponse(vote.getId(), voter.getNickname(), voter.getProfileImage());
+            return new CreateVoteUserResponse(voter.getId(), voter.getNickname(), voter.getProfileImage());
         }
     }
 
@@ -141,6 +142,7 @@ public class VoteService {
     @Transactional
     public void deleteVoteResult(String voteHash, DeleteVoteResultRequest deleteVoteResultRequest) {
         Long userId = deleteVoteResultRequest.getUserId();
+        Optional<Voter> byId = voterRepository.findById(userId);
 
         Vote vote = checkVoteExists(voteHash);
         checkIsExpired(vote);
@@ -150,7 +152,9 @@ public class VoteService {
     }
 
     private Voter checkVoterExists(String voteHash, Long userId) {
+
         Optional<Voter> voter = voterRepository.findById(userId);
+        
         if (voter.isEmpty() || !Objects.equals(voter.get().getVote().getVoteHash(), voteHash)) {
             throw new EntityNotFoundException("없는 사용자 입니다.");
         }
@@ -200,7 +204,7 @@ public class VoteService {
 
     private void checkIsExpired(Vote vote) {
         if (!vote.getExpireAt().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("투표 기간이 지났습니다.");
+            throw new IllegalStateException("투표 기간이 지났습니다.");
         }
     }
 

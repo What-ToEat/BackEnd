@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -107,6 +108,7 @@ class VoteControllerTest {
         Vote vote = Vote.builder().title("식당 정하기").voteHash("123").expireAt(LocalDateTime.now().plusHours(2L)).voters(new ArrayList<>()).build();
         return voteRepository.save(vote);
     }
+    
 
     @Test
     @DisplayName("POST /api/votes/{id} : 없는 투표 참여 테스트")
@@ -153,14 +155,20 @@ class VoteControllerTest {
     @DisplayName("DELETE /api/votes/{id}/selection : 정상적으로 투표 기록 삭제")
     void deleteVoteResultTest() throws Exception {
         Vote vote = registerVote();
-        voterRepository.save(Voter.builder().nickname("qwe").id(1L).vote(vote).profileImage(1).build());
+        Voter voter = Voter.builder().nickname("qwe").vote(vote).profileImage(1).build();
+        voterRepository.save(voter);
+        vote.getVoters().add(voter);
+
+        String jsonContent = String.format("{\"nickname\": \"qwe\", \"userId\": %d}" , voter.getId());
+
         ResultActions resultActions = mvc.perform(
                 MockMvcRequestBuilders
                         .delete("/api/vote/123/selection")
                         .contentType("application/json")
-                        .content("{\"nickname\": \"이광훈\", \"userId\": 1}")
+                        .content(jsonContent)
                         .accept(MediaType.ALL)
         );
         resultActions.andExpect(status().isOk());
+
     }
 }

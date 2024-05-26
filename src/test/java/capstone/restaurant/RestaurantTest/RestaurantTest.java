@@ -90,7 +90,7 @@ public class RestaurantTest {
 
         String[] list  = {"맛있어요" , "넓어요"};
 
-        RestaurantListResponse response = restaurantService.restaurantListFindByTag("", list, 1);
+        RestaurantListResponse response = restaurantService.restaurantListFindByTag(null, list, 1);
 
         Assertions.assertThat(response.getRestaurants().get(0).getRestaurantId()).isEqualTo("12");
 

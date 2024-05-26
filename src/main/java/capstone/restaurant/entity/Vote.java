@@ -32,6 +32,7 @@ public class Vote {
 
     private Boolean allowDuplicateVote;
 
+    @Builder.Default
     @OneToMany(mappedBy = "vote", cascade = CascadeType.REMOVE)
     private List<Voter> voters = new ArrayList<>();
 
