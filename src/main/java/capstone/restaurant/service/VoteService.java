@@ -102,7 +102,7 @@ public class VoteService {
 
             this.voterRepository.save(voter);
 
-            return new CreateVoteUserResponse(vote.getId(), voter.getNickname(), voter.getProfileImage());
+            return new CreateVoteUserResponse(voter.getId(), voter.getNickname(), voter.getProfileImage());
         }
     }
 
