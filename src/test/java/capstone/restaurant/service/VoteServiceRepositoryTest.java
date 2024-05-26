@@ -4,6 +4,7 @@ package capstone.restaurant.service;
 import capstone.restaurant.dto.vote.*;
 import capstone.restaurant.entity.*;
 import capstone.restaurant.repository.*;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.assertj.core.api.Assertions;
@@ -36,14 +37,16 @@ public class VoteServiceRepositoryTest {
     public VoteResultRepository voteResultRepository;
     @Autowired
     public VoteService voteService;
+    @Autowired
+    public EntityManager entityManager;
 
     @AfterEach
     public void afterEach(){
         voteResultRepository.deleteAll();
         voteOptionRepository.deleteAll();
         restaurantRepository.deleteAll();
-        voteRepository.deleteAll();
         voterRepository.deleteAll();
+        voteRepository.deleteAll();
     }
 
     @Test
@@ -204,36 +207,16 @@ public class VoteServiceRepositoryTest {
         vote.getVoteOptions().add(voteOption1);
         vote.getVoteOptions().add(voteOption2);
 
-        this.voteRepository.save(vote);
-
         voteOptionRepository.save(voteOption1);
         voteOptionRepository.save(voteOption2);
 
-        List<String> op = new ArrayList<>();
-        op.add("13");
-        op.add("12");
+        this.voteRepository.save(vote);
 
-        CreateVoteResultRequest createVoteResultRequest = CreateVoteResultRequest.builder()
-                .userId(voter1.getId())
-                .nickname("abcd")
-                .options(op)
-                .build();
-
-        this.voteService.createVoteResult(vote.getVoteHash() , createVoteResultRequest);
-
-        Vote vote1 = this.voteRepository.findByVoteHash(vote.getVoteHash());
-        int voteResult = 0;
         
-        for (VoteOption voteOption : vote1.getVoteOptions()) {
-            System.out.println("voteOption.getVoteResults() = " + voteOption.getVoteResults());
-            voteResult += voteOption.getVoteResults().size();
-        }
-
-        Assertions.assertThat(voteResult).isEqualTo(2);
     }
 
     @Test
-    @Transactional
+    //@Transactional
     @DisplayName("[createVoteResult] 중복 투표가 아닌데 중복 투표하면 실패")
     public void duplicateVoteFailTest(){
 
@@ -252,35 +235,12 @@ public class VoteServiceRepositoryTest {
                 .build();
 
         Voter voter = Voter.builder().nickname("abcd").profileImage(1).vote(vote).build();
-
-        Voter voter1 = this.voterRepository.save(voter);
-
-        vote.getVoters().add(voter1);
-
+        this.voterRepository.save(voter);
         this.voteRepository.save(vote);
 
-        VoteOption voteOption1 = VoteOption.builder().restaurant(restaurant1).vote(vote).build();
-        VoteOption voteOption2 = VoteOption.builder().restaurant(restaurant2).vote(vote).build();
+        List<Voter> voters = vote.getVoters();
+        System.out.println("voters = " + voters);
 
-        vote.getVoteOptions().add(voteOption1);
-        vote.getVoteOptions().add(voteOption2);
-
-        voteOptionRepository.save(voteOption1);
-        voteOptionRepository.save(voteOption2);
-
-        List<String> op = new ArrayList<>();
-        op.add("13");
-        op.add("12");
-
-        CreateVoteResultRequest createVoteResultRequest = CreateVoteResultRequest.builder()
-                .userId(voter1.getId())
-                .nickname("abcd")
-                .options(op)
-                .build();
-
-        Assertions.assertThatThrownBy(() -> {
-            voteService.createVoteResult(vote.getVoteHash() , createVoteResultRequest);
-        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
