@@ -45,8 +45,8 @@ public class VoteServiceRepositoryTest {
         voteResultRepository.deleteAll();
         voteOptionRepository.deleteAll();
         restaurantRepository.deleteAll();
-        voterRepository.deleteAll();
         voteRepository.deleteAll();
+        voterRepository.deleteAll();
     }
 
     @Test
@@ -178,45 +178,6 @@ public class VoteServiceRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("[createVoteResult] 투표 결과 저장 성공")
-    public void createVoteResultSuccessTest(){
-
-        Restaurant restaurant1 = Restaurant.builder().name("abc").restaurantHash("13").build();
-        Restaurant restaurant2 = Restaurant.builder().name("def").restaurantHash("12").build();
-
-        this.restaurantRepository.save(restaurant1);
-        this.restaurantRepository.save(restaurant2);
-
-        Vote vote =  Vote.builder()
-                .title("Test")
-                .email(null)
-                .allowDuplicateVote(true)
-                .expireAt(LocalDateTime.now().plusHours(2))
-                .voteHash("abcdef")
-                .build();
-
-        Voter voter = Voter.builder().nickname("abcd").profileImage(1).vote(vote).build();
-
-        Voter voter1 = this.voterRepository.save(voter);
-
-        vote.getVoters().add(voter1);
-
-        VoteOption voteOption1 = VoteOption.builder().restaurant(restaurant1).vote(vote).build();
-        VoteOption voteOption2 = VoteOption.builder().restaurant(restaurant2).vote(vote).build();
-
-        vote.getVoteOptions().add(voteOption1);
-        vote.getVoteOptions().add(voteOption2);
-
-        voteOptionRepository.save(voteOption1);
-        voteOptionRepository.save(voteOption2);
-
-        this.voteRepository.save(vote);
-
-        
-    }
-
-    @Test
-    //@Transactional
     @DisplayName("[createVoteResult] 중복 투표가 아닌데 중복 투표하면 실패")
     public void duplicateVoteFailTest(){
 
@@ -235,12 +196,35 @@ public class VoteServiceRepositoryTest {
                 .build();
 
         Voter voter = Voter.builder().nickname("abcd").profileImage(1).vote(vote).build();
-        this.voterRepository.save(voter);
+
+        Voter voter1 = this.voterRepository.save(voter);
+
+        vote.getVoters().add(voter1);
+
         this.voteRepository.save(vote);
 
-        List<Voter> voters = vote.getVoters();
-        System.out.println("voters = " + voters);
+        VoteOption voteOption1 = VoteOption.builder().restaurant(restaurant1).vote(vote).build();
+        VoteOption voteOption2 = VoteOption.builder().restaurant(restaurant2).vote(vote).build();
 
+        vote.getVoteOptions().add(voteOption1);
+        vote.getVoteOptions().add(voteOption2);
+
+        voteOptionRepository.save(voteOption1);
+        voteOptionRepository.save(voteOption2);
+
+        List<String> op = new ArrayList<>();
+        op.add("13");
+        op.add("12");
+
+        CreateVoteResultRequest createVoteResultRequest = CreateVoteResultRequest.builder()
+                .userId(voter1.getId())
+                .nickname("abcd")
+                .options(op)
+                .build();
+
+        Assertions.assertThatThrownBy(() -> {
+            voteService.createVoteResult(vote.getVoteHash() , createVoteResultRequest);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
