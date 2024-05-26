@@ -330,4 +330,65 @@ public class VoteServiceRepositoryTest {
             voteService.createVoteResult(vote.getVoteHash() , createVoteResultRequest);
         }).isInstanceOf(IllegalStateException.class);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("[createVoteResult] 투표 정상적으로 참여 테스트")
+    public void createVoteSuccessTest(){
+
+        Restaurant restaurant1 = Restaurant.builder().name("abc").restaurantHash("13").build();
+        Restaurant restaurant2 = Restaurant.builder().name("def").restaurantHash("12").build();
+
+        this.restaurantRepository.save(restaurant1);
+        this.restaurantRepository.save(restaurant2);
+
+        Vote vote =  Vote.builder()
+                .title("Test")
+                .email(null)
+                .allowDuplicateVote(true)
+                .expireAt(LocalDateTime.now().plusHours(2))
+                .voteHash("abcdef")
+                .build();
+
+        Voter voter = Voter.builder().nickname("abcd").profileImage(1).vote(vote).build();
+
+        vote.getVoters().add(voter);
+
+        this.voteRepository.save(vote);
+        this.voterRepository.save(voter);
+
+        VoteOption voteOption1 = VoteOption.builder().restaurant(restaurant1).vote(vote).build();
+        VoteOption voteOption2 = VoteOption.builder().restaurant(restaurant2).vote(vote).build();
+
+        vote.getVoteOptions().add(voteOption1);
+        vote.getVoteOptions().add(voteOption2);
+
+        voteOptionRepository.save(voteOption1);
+        voteOptionRepository.save(voteOption2);
+
+        List<String> op = new ArrayList<>();
+        op.add("13");
+        op.add("12");
+
+        CreateVoteResultRequest createVoteResultRequest = CreateVoteResultRequest.builder()
+                .userId(voter.getId())
+                .nickname("abcd")
+                .options(op)
+                .build();
+
+        this.voteService.createVoteResult(vote.getVoteHash() , createVoteResultRequest);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Vote byVoteHash = this.voteRepository.findByVoteHash(vote.getVoteHash());
+
+        int votes = 0;
+        for (VoteOption voteOption : byVoteHash.getVoteOptions()) {
+            votes += voteOption.getVoteResults().size();
+        }
+
+        Assertions.assertThat(votes).isEqualTo(2);
+
+    }
 }

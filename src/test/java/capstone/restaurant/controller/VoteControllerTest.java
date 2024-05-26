@@ -2,8 +2,10 @@ package capstone.restaurant.controller;
 
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.Vote;
+import capstone.restaurant.entity.VoteOption;
 import capstone.restaurant.entity.Voter;
 import capstone.restaurant.repository.RestaurantRepository;
+import capstone.restaurant.repository.VoteOptionRepository;
 import capstone.restaurant.repository.VoteRepository;
 import capstone.restaurant.repository.VoterRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +43,8 @@ class VoteControllerTest {
     private VoteRepository voteRepository;
     @Autowired
     private VoterRepository voterRepository;
+    @Autowired
+    private VoteOptionRepository voteOptionRepository;
 
     @Test
     @DisplayName("POST /api/votes : 투표 생성 성공")
@@ -169,6 +173,43 @@ class VoteControllerTest {
                         .accept(MediaType.ALL)
         );
         resultActions.andExpect(status().isOk());
-
     }
+
+    @Test
+    @DisplayName("POST /api/votes/{id}/selection : 정상적으로 투표 수행")
+    void postVoteResultTest() throws Exception {
+
+        Restaurant restaurant = Restaurant.builder().name("asdf").restaurantHash("123").build();
+
+        Vote vote = Vote.builder().title("식당 정하기").
+                voteHash("123").
+                expireAt(LocalDateTime.now().plusHours(2L)).
+                allowDuplicateVote(true).
+                voters(new ArrayList<>()).build();
+
+        VoteOption voteOption = VoteOption.builder().
+                vote(vote).
+                restaurant(restaurant).
+                build();
+
+        restaurantRepository.save(restaurant);
+        voteRepository.save(vote);
+        voteOptionRepository.save(voteOption);
+
+        Voter voter = Voter.builder().nickname("qwe").vote(vote).profileImage(1).build();
+        voterRepository.save(voter);
+
+        String jsonContent = String.format("{\"nickname\": \"%s\", \"userId\": %d , \"options\": [\"%s\"]}" , "qwe" , voter.getId() , "123");
+
+
+        ResultActions resultActions = mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/api/vote/123/selection")
+                        .contentType("application/json")
+                        .content(jsonContent)
+                        .accept(MediaType.ALL)
+        );
+        resultActions.andExpect(status().isOk());
+    }
+
 }
