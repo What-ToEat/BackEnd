@@ -1,7 +1,11 @@
 package capstone.restaurant.service;
 
+import capstone.restaurant.common.TokenProvider;
 import capstone.restaurant.common.exception.InvalidTokenException;
 import capstone.restaurant.dto.auth.TokenInfo;
+import capstone.restaurant.dto.auth.Tokens;
+import capstone.restaurant.entity.Member;
+import capstone.restaurant.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +23,29 @@ import org.springframework.web.client.RestTemplate;
 public class AuthService {
     @Value("${spring.auth.kakao.appId}")
     private String appId;
-    public TokenInfo verifyKakaoToken(String token) {
+    private final TokenProvider tokenProvider;
+    private final MemberRepository memberRepository;
+
+    public Tokens signupOrLogin(String token) {
+        TokenInfo tokenInfo = verifyKakaoToken(token);
+        Member member = memberRepository.findByProviderId(tokenInfo.getId());
+        if (member == null) {
+            member = signup(tokenInfo.getId());
+        }
+        String accessToken = tokenProvider.createAccessToken(member.getId());
+        String refreshToken = tokenProvider.createRefreshToken(member.getId());
+        return new Tokens(accessToken, refreshToken);
+    }
+
+     private Member signup(Long providerId) {
+         Member member = Member.builder()
+                 .providerId(providerId)
+                 .build();
+         return memberRepository.save(member);
+    }
+
+
+    private TokenInfo verifyKakaoToken(String token) {
         try {
             String url = "https://kapi.kakao.com/v1/user/access_token_info";
             RestTemplate restTemplate = new RestTemplate();
