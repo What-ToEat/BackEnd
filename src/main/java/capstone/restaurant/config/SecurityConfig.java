@@ -11,24 +11,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -45,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) -> {
                     authorizeHttpRequests
                             .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+//                            .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/api/docs/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/api/swagger-ui/**")).permitAll()
                             .anyRequest().authenticated();
