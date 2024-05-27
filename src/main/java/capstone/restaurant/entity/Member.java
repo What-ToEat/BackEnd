@@ -21,10 +21,5 @@ public class Member {
 
     private String nickname;
 
-    private String providerId;
-
-    private int profileImage;
-    @NotNull
-    @Schema(example = "동창회 식당 정하기")
-    private String token;
+    private Long providerId;
 }
