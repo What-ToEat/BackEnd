@@ -20,9 +20,9 @@ jobs:
 
       - name: env 설정
         run: |
-          echo "DB_URL=${{ secrets.DB_URL }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_URL=${{ secrets.DB_URL_TEST }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME_TEST }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_TEST }}" >> .env
           echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
           echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
           echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
