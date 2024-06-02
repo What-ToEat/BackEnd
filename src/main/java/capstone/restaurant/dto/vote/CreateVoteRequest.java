@@ -37,7 +37,7 @@ public class CreateVoteRequest {
                 .voteHash(voteHash)
                 .email(email)
                 .allowDuplicateVote(allowDuplicateVote)
-                .expireAt(LocalDateTime.now().plusMinutes(expirationTime))
+                .expireAt(LocalDateTime.now().plusHours(expirationTime))
                 .build();
     }
 }
