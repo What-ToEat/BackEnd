@@ -17,5 +17,7 @@ public class FindVoteOptionSub {
 
     private String restaurantName;
 
+    private String thumbnail;
+
     private List<FindVoteOptionVoter> voterList;
 }
