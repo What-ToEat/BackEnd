@@ -177,6 +177,7 @@ public class VoteService {
             FindVoteOptionSub findVoteOptionSub = FindVoteOptionSub.builder()
                     .restaurantName(voteOption.getRestaurant().getName())
                     .restaurantId(voteOption.getRestaurant().getRestaurantHash())
+                    .thumbnail(voteOption.getRestaurant().getThumbnail())
                     .voterList(getVotersForRestaurant(voteOption.getVoteResults()))
                     .build();
 
