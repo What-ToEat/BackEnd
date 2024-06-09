@@ -27,6 +27,11 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
+    public RestaurantResponse findRandomRestaurant() {
+        Restaurant restaurant = restaurantRepository.findRandomRestaurant();
+        return convertRestaurantToRestaurantResponse(restaurant);
+    }
+
     @Transactional
     public RestaurantListResponse restaurantListFindByTag(String place , String[] tags , int page){
 
