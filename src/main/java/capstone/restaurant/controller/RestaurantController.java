@@ -38,7 +38,7 @@ public class RestaurantController {
         if(page <= 0) throw new IllegalArgumentException("page 는 0보다 큰 정수이어야 합니다");
 
         RestaurantListResponse restaurantListResponse = this.restaurantService.restaurantListFindByTag(place , tags  , page);
-
+        restaurantService.findRandomRestaurant();
         return new ResponseDto<>(200, "ok", restaurantListResponse);
 
     }
@@ -55,6 +55,14 @@ public class RestaurantController {
         RestaurantListResponse restaurantListResponse=  this.restaurantService.restaurantListFindByKeyword(keyword , page);
 
         return new ResponseDto<>(200, "ok" , restaurantListResponse);
+    }
+    @Operation(summary = "식당 랜덤 조회", description = "랜덤으로 식당하나를 뽑아서 응답한다.")
+    @GetMapping("/random")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = { @ApiResponse(responseCode = "200" , description = "랜덤 레스토랑 정보 반환") , @ApiResponse(responseCode = "404" , description = "식당을 찾을 수 없음")})
+    public ResponseDto<RestaurantResponse> getRestaurantRandom() {
+        RestaurantResponse restaurantResponse = this.restaurantService.findRandomRestaurant();
+        return new ResponseDto<>(200, "ok", restaurantResponse);
     }
 
     @Operation(summary = "식당 상세 조회", description = "식당의 상세정보를 조회한다.")
