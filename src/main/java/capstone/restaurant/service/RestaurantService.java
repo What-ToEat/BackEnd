@@ -25,9 +25,21 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
+    @Transactional
+    public RestaurantResponse findRestaurantById(String restaurantId) {
+
+        Restaurant restaurant = this.restaurantRepository.findByRestaurantHash(restaurantId);
+
+        if(restaurant == null){
+            throw new EntityNotFoundException("해당 레스토랑을 찾을 수 없습니다");
+        }
+
+        return Restaurant.toDto(restaurant);
+    }
+
     public RestaurantResponse findRandomRestaurant() {
         Restaurant restaurant = restaurantRepository.findRandomRestaurant();
-        return convertRestaurantToRestaurantResponse(restaurant);
+        return Restaurant.toDto(restaurant);
     }
 
     @Transactional
@@ -68,33 +80,5 @@ public class RestaurantService {
 
         }
         return restaurantListSubs;
-    }
-
-    @Transactional
-    public RestaurantResponse findRestaurantById(String restaurantId) {
-
-        Restaurant restaurant = this.restaurantRepository.findByRestaurantHash(restaurantId);
-
-        if(restaurant == null){
-            throw new EntityNotFoundException("해당 레스토랑을 찾을 수 없습니다");
-        }
-
-        return convertRestaurantToRestaurantResponse(restaurant);
-    }
-
-    private RestaurantResponse convertRestaurantToRestaurantResponse(Restaurant restaurant){
-        List<TagResponse> tagResponseList = new ArrayList<TagResponse>();
-
-        for (RestaurantTag restaurantTag : restaurant.getRestaurantTag()) {
-            tagResponseList.add(new TagResponse(restaurantTag.getTag().getTagName() , restaurantTag.getTag().getTagCategory().getCategoryName()));
-        }
-
-        List<ReviewListSub> reviewList = new ArrayList<>();
-
-        for (Review review : restaurant.getReviews()){
-            reviewList.add(new ReviewListSub(review.getReview() , review.getIsAiReview()));
-        }
-
-        return new RestaurantResponse(restaurant.getName() , restaurant.getThumbnail() , tagResponseList , restaurant.getRestaurantHash() , reviewList);
     }
 }
