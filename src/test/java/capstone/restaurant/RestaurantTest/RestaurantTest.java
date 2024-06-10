@@ -11,22 +11,15 @@ import capstone.restaurant.repository.RestaurantTagRepository;
 import capstone.restaurant.repository.TagCategoryRepository;
 import capstone.restaurant.repository.TagRepository;
 import capstone.restaurant.service.RestaurantService;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import org.aspectj.lang.annotation.After;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.sql.DataSource;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -90,7 +83,7 @@ public class RestaurantTest {
 
         String[] list  = {"맛있어요" , "넓어요"};
 
-        RestaurantListResponse response = restaurantService.restaurantListFindByTag(null, list, 1);
+        RestaurantListResponse response = restaurantService.findRestaurantListByTag(null, list, 1);
 
         Assertions.assertThat(response.getRestaurants().get(0).getRestaurantId()).isEqualTo("12");
 
@@ -106,8 +99,8 @@ public class RestaurantTest {
 
         restaurantRepository.saveAll(Arrays.asList(re));
 
-        RestaurantListResponse response1 = restaurantService.restaurantListFindByKeyword("ab" , 1);
-        RestaurantListResponse response2 = restaurantService.restaurantListFindByKeyword("ab" , 2);
+        RestaurantListResponse response1 = restaurantService.findRestaurantListByKeyword("ab" , 1);
+        RestaurantListResponse response2 = restaurantService.findRestaurantListByKeyword("ab" , 2);
 
         Assertions.assertThat(response1.getRestaurants().size()).isEqualTo(3);
         Assertions.assertThat(response2.getRestaurants().size()).isEqualTo(0);
@@ -134,7 +127,7 @@ public class RestaurantTest {
         restaurantRepository.save(restaurant1);
 
         Assertions.assertThatThrownBy(() -> {
-            restaurantService.restaurantFindById("12");
+            restaurantService.findRestaurantById("12");
         }).isInstanceOf(EntityNotFoundException.class);
     }
 
@@ -162,7 +155,7 @@ public class RestaurantTest {
         tagRepository.saveAll(Arrays.asList(tags));
         restaurantTagRepository.saveAll(Arrays.asList(restaurantTags));
 
-        RestaurantResponse restaurantResponse = restaurantService.restaurantFindById("13");
+        RestaurantResponse restaurantResponse = restaurantService.findRestaurantById("13");
 
         Assertions.assertThat(restaurant1.getRestaurantHash()).isEqualTo(restaurantResponse.getRestaurantId());
         Assertions.assertThat(restaurantResponse.getTags().get(0).getName()).isEqualTo(tag1.getTagName());

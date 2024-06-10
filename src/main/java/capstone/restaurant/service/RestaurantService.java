@@ -8,13 +8,11 @@ import capstone.restaurant.dto.tag.TagResponse;
 import capstone.restaurant.entity.Restaurant;
 import capstone.restaurant.entity.RestaurantTag;
 import capstone.restaurant.entity.Review;
-import capstone.restaurant.entity.Tag;
 import capstone.restaurant.repository.RestaurantRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +31,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantListResponse restaurantListFindByTag(String place , String[] tags , int page){
+    public RestaurantListResponse findRestaurantListByTag(String place , String[] tags , int page){
 
         RestaurantListResponse response = new RestaurantListResponse();
         response.setRestaurants(this.restaurantRepository.findRestaurantListByTag(place , tags , page));
@@ -41,7 +39,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantListResponse restaurantListFindByKeyword(String keyword , Integer page){
+    public RestaurantListResponse findRestaurantListByKeyword(String keyword , Integer page){
         RestaurantListResponse response = new RestaurantListResponse();
 
         Page<Restaurant> restaurantList = this.restaurantRepository.findRestaurantsByNameContaining(keyword, PageRequest.of(page - 1 , 10));
@@ -73,7 +71,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantResponse restaurantFindById(String restaurantId) {
+    public RestaurantResponse findRestaurantById(String restaurantId) {
 
         Restaurant restaurant = this.restaurantRepository.findByRestaurantHash(restaurantId);
 
