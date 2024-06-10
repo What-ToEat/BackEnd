@@ -210,6 +210,7 @@ public class VoteService {
     }
 
     @Scheduled(fixedRate = 60000)
+    @Transactional
     public void sendResult() {
         LocalDateTime now = LocalDateTime.now();
         List<Vote> votes = voteRepository.findAll();

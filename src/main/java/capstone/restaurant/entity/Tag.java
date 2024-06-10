@@ -1,6 +1,7 @@
 package capstone.restaurant.entity;
 
 
+import capstone.restaurant.dto.tag.TagResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +23,11 @@ public class Tag {
     @JoinColumn(name="tag_category_id")
     private TagCategory tagCategory;
 
+    public static TagResponse toDto(Tag tag) {
+        return new TagResponse(tag.getTagName(), tag.getTagCategory().getCategoryName());
+    }
+
+//    public TagResponse toDtoList(List<Tag> tag) {
+//        return new TagResponse(tag.getTagName(), tag.getTagCategory().getCategoryName());
+//    }
 }
